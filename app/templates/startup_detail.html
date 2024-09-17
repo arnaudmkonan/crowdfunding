@@ -1,0 +1,74 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>{{ startup.name }} - CrowdFund Innovate</title>
+    <style>
+        /* Copy the CSS from the provided startup_detail.html */
+    </style>
+</head>
+<body>
+    <header>
+        <div class="container">
+            <nav>
+                <div class="logo">CrowdFund Innovate</div>
+                <div class="nav-links">
+                    <a href="/startups">Startups</a>
+                    <a href="/how-it-works">How It Works</a>
+                    <a href="/about">About</a>
+                    <a href="/login">Login</a>
+                    <a href="/signup">Sign Up</a>
+                </div>
+            </nav>
+        </div>
+    </header>
+
+    <main>
+        <div class="startup-header">
+            <div class="container">
+                <h1 class="startup-title">{{ startup.name }}</h1>
+                <p class="startup-tagline">{{ startup.tagline }}</p>
+            </div>
+        </div>
+        
+        <div class="container">
+            <div class="startup-content">
+                <div class="startup-details">
+                    <img src="https://picsum.photos/seed/{{ startup.id }}/800/400" alt="{{ startup.name }} product showcase" class="startup-image">
+                    <h2>About {{ startup.name }}</h2>
+                    <p>{{ startup.description }}</p>
+                    
+                    <!-- Add more details as needed -->
+                </div>
+                
+                <div class="startup-sidebar">
+                    <div class="funding-card">
+                        <h2>Funding Progress</h2>
+                        <div class="progress-bar">
+                            <div class="progress" style="width: {{ (startup.raised / startup.goal) * 100 }}%;"></div>
+                        </div>
+                        <div class="funding-info">
+                            <span>${{ "{:,}".format(startup.raised) }} raised</span>
+                            <span>{{ "{:.0%}".format(startup.raised / startup.goal) }} of ${{ "{:,}".format(startup.goal) }} goal</span>
+                        </div>
+                        <a href="#invest-modal" class="invest-button">Invest Now</a>
+                    </div>
+                    
+                    <!-- Add more sidebar content as needed -->
+                </div>
+            </div>
+        </div>
+    </main>
+
+    <footer>
+        <div class="container">
+            <p>&copy; 2023 CrowdFund Innovate. All rights reserved.</p>
+        </div>
+    </footer>
+
+    <script>
+        // Add any necessary JavaScript
+    </script>
+</body>
+</html>
