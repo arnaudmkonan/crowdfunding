@@ -1,6 +1,7 @@
 from fastapi import FastAPI, Request, Depends
 from fastapi.templating import Jinja2Templates
 from fastapi.staticfiles import StaticFiles
+from fastapi.responses import RedirectResponse
 from app.routers import projects, users
 from app.database import engine, get_db
 from app.models import Base, Project
