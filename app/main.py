@@ -52,6 +52,10 @@ async def signup(request: Request):
 async def how_it_works(request: Request):
     return templates.TemplateResponse("how_it_works.html", {"request": request})
 
+@app.get("/signup")
+async def signup(request: Request):
+    return templates.TemplateResponse("sign_up.html", {"request": request})
+
 @app.get("/api")
 async def api_root():
     return {"message": "Welcome to the CrowdFund Innovate API"}
