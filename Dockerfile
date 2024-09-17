@@ -7,11 +7,12 @@ RUN pip install --no-cache-dir -r requirements.txt
 
 COPY . .
 
-# Create the templates directory
-RUN mkdir -p /app/app/templates
+# Create the templates and static directories
+RUN mkdir -p /app/app/templates /app/app/static
 
-# Copy the templates
+# Copy the templates and static files
 COPY app/templates /app/app/templates
+COPY app/static /app/app/static
 
 ENV PATH="/root/.local/bin:${PATH}"
 

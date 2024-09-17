@@ -11,8 +11,8 @@ app = FastAPI(title="CrowdFund Innovate")
 Base.metadata.create_all(bind=engine)
 
 # Include routers
-app.include_router(users.router, prefix="/users", tags=["users"])
-app.include_router(projects.router, prefix="/projects", tags=["projects"])
+app.include_router(users.router, prefix="/api/users", tags=["users"])
+app.include_router(projects.router, prefix="/api/projects", tags=["projects"])
 
 # Set up Jinja2 templates
 templates = Jinja2Templates(directory="app/templates")
