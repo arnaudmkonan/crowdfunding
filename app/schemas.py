@@ -1,15 +1,17 @@
-from pydantic import BaseModel
+from pydantic import BaseModel, EmailStr
 from datetime import datetime
+from typing import Optional
 
 class UserBase(BaseModel):
     username: str
-    email: str
+    email: EmailStr
 
 class UserCreate(UserBase):
     password: str
 
 class User(UserBase):
     id: int
+    projects: list["Project"] = []
 
     class Config:
         orm_mode = True
@@ -30,3 +32,5 @@ class Project(ProjectBase):
 
     class Config:
         orm_mode = True
+
+User.update_forward_refs()
