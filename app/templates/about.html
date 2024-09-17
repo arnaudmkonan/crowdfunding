@@ -6,32 +6,33 @@
     <title>About Us - CrowdFund Innovate</title>
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha1/dist/css/bootstrap.min.css" rel="stylesheet">
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.7.2/font/bootstrap-icons.css">
+    <style>
+        .bg-primary-light {
+            background-color: #e3f2fd;
+        }
+        .team-member {
+            transition: transform 0.3s ease;
+        }
+        .team-member:hover {
+            transform: translateY(-5px);
+        }
+    </style>
 </head>
 <body>
-    <header>
-        <nav class="navbar navbar-expand-lg navbar-light bg-light">
-            <div class="container">
-                <a class="navbar-brand" href="/">CrowdFund Innovate</a>
-                <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav" aria-controls="navbarNav" aria-expanded="false" aria-label="Toggle navigation">
+    <header class="bg-white shadow-sm">
+        <nav class="navbar navbar-expand-lg navbar-light container">
+            <div class="container-fluid">
+                <a class="navbar-brand fw-bold text-primary" href="/">CrowdFund Innovate</a>
+                <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav">
                     <span class="navbar-toggler-icon"></span>
                 </button>
                 <div class="collapse navbar-collapse" id="navbarNav">
                     <ul class="navbar-nav ms-auto">
-                        <li class="nav-item">
-                            <a class="nav-link" href="/startups">Startups</a>
-                        </li>
-                        <li class="nav-item">
-                            <a class="nav-link" href="/how-it-works">How It Works</a>
-                        </li>
-                        <li class="nav-item">
-                            <a class="nav-link active" href="/about">About</a>
-                        </li>
-                        <li class="nav-item">
-                            <a class="nav-link" href="/login">Login</a>
-                        </li>
-                        <li class="nav-item">
-                            <a class="nav-link" href="/signup">Sign Up</a>
-                        </li>
+                        <li class="nav-item"><a class="nav-link" href="/startups">Startups</a></li>
+                        <li class="nav-item"><a class="nav-link" href="/how-it-works">How It Works</a></li>
+                        <li class="nav-item"><a class="nav-link active" href="/about">About</a></li>
+                        <li class="nav-item"><a class="nav-link" href="/login">Login</a></li>
+                        <li class="nav-item"><a class="nav-link" href="/signup">Sign Up</a></li>
                     </ul>
                 </div>
             </div>
@@ -39,47 +40,138 @@
     </header>
 
     <main>
-        <section class="py-5 text-center container">
-            <div class="row py-lg-5">
-                <div class="col-lg-6 col-md-8 mx-auto">
-                    <h1 class="fw-light">About CrowdFund Innovate</h1>
-                    <p class="lead text-muted">We're on a mission to democratize funding for innovative startups and bring groundbreaking ideas to life.</p>
+        <section class="bg-primary text-white py-5">
+            <div class="container text-center">
+                <h1 class="display-4 fw-bold mb-3">About CrowdFund Innovate</h1>
+                <p class="lead">We're on a mission to democratize funding for innovative startups and bring groundbreaking ideas to life.</p>
+            </div>
+        </section>
+
+        <section class="py-5">
+            <div class="container">
+                <div class="row g-4">
+                    <div class="col-md-6">
+                        <div class="card h-100 border-0 shadow-sm">
+                            <div class="card-body">
+                                <h2 class="card-title h4 mb-3">Our Vision</h2>
+                                <p class="card-text">At CrowdFund Innovate, we envision a world where great ideas are not limited by financial constraints. By leveraging the power of crowdfunding, we aim to create a global community of innovators and supporters who can collectively shape the future.</p>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="col-md-6">
+                        <div class="card h-100 border-0 shadow-sm">
+                            <div class="card-body">
+                                <h2 class="card-title h4 mb-3">Our Mission</h2>
+                                <p class="card-text">Our mission is to connect visionary entrepreneurs with passionate investors, fostering innovation and driving positive change across various industries. We strive to make the funding process transparent, accessible, and rewarding for both startups and investors.</p>
+                            </div>
+                        </div>
+                    </div>
                 </div>
             </div>
         </section>
 
-        <div class="container">
-            <div class="row">
-                <div class="col-md-6 mb-4">
-                    <h2>Our Vision</h2>
-                    <p>At CrowdFund Innovate, we envision a world where great ideas are not limited by financial constraints. By leveraging the power of crowdfunding, we aim to create a global community of innovators and supporters who can collectively shape the future.</p>
-                </div>
-                <div class="col-md-6 mb-4">
-                    <h2>Our Mission</h2>
-                    <p>Our mission is to connect visionary entrepreneurs with passionate investors, fostering innovation and driving positive change across various industries. We strive to make the funding process transparent, accessible, and rewarding for both startups and investors.</p>
+        <section class="py-5 bg-primary-light">
+            <div class="container">
+                <h2 class="text-center mb-4">Why Choose Us?</h2>
+                <div class="row g-4">
+                    <div class="col-md-4">
+                        <div class="card h-100 border-0 shadow-sm">
+                            <div class="card-body text-center">
+                                <i class="bi bi-search fs-1 text-primary mb-3"></i>
+                                <h3 class="card-title h5">Curated Selection</h3>
+                                <p class="card-text">We carefully select high-potential startups to ensure quality and innovation.</p>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="col-md-4">
+                        <div class="card h-100 border-0 shadow-sm">
+                            <div class="card-body text-center">
+                                <i class="bi bi-shield-check fs-1 text-primary mb-3"></i>
+                                <h3 class="card-title h5">Rigorous Vetting</h3>
+                                <p class="card-text">Our thorough vetting process ensures the credibility and potential of each startup.</p>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="col-md-4">
+                        <div class="card h-100 border-0 shadow-sm">
+                            <div class="card-body text-center">
+                                <i class="bi bi-graph-up fs-1 text-primary mb-3"></i>
+                                <h3 class="card-title h5">Transparent Process</h3>
+                                <p class="card-text">We provide clear communication and updates throughout the investment journey.</p>
+                            </div>
+                        </div>
+                    </div>
                 </div>
             </div>
-            <div class="row">
-                <div class="col-md-12 mb-4">
-                    <h2>Why Choose Us?</h2>
-                    <ul>
-                        <li>Curated selection of high-potential startups</li>
-                        <li>Rigorous vetting process to ensure quality and potential</li>
-                        <li>User-friendly platform for easy investing</li>
-                        <li>Transparent communication between startups and investors</li>
-                        <li>Support and resources for both entrepreneurs and investors</li>
-                    </ul>
+        </section>
+
+        <section class="py-5">
+            <div class="container">
+                <h2 class="text-center mb-4">Meet Our Team</h2>
+                <div class="row g-4">
+                    <div class="col-md-4">
+                        <div class="card h-100 border-0 shadow-sm team-member">
+                            <img src="https://via.placeholder.com/300x200.png?text=John+Doe" class="card-img-top" alt="John Doe">
+                            <div class="card-body text-center">
+                                <h3 class="card-title h5">John Doe</h3>
+                                <p class="card-text">Co-founder & CEO</p>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="col-md-4">
+                        <div class="card h-100 border-0 shadow-sm team-member">
+                            <img src="https://via.placeholder.com/300x200.png?text=Jane+Smith" class="card-img-top" alt="Jane Smith">
+                            <div class="card-body text-center">
+                                <h3 class="card-title h5">Jane Smith</h3>
+                                <p class="card-text">Co-founder & CTO</p>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="col-md-4">
+                        <div class="card h-100 border-0 shadow-sm team-member">
+                            <img src="https://via.placeholder.com/300x200.png?text=Mike+Johnson" class="card-img-top" alt="Mike Johnson">
+                            <div class="card-body text-center">
+                                <h3 class="card-title h5">Mike Johnson</h3>
+                                <p class="card-text">Chief Investment Officer</p>
+                            </div>
+                        </div>
+                    </div>
                 </div>
             </div>
-        </div>
+        </section>
+        
+        <section class="bg-primary-light py-5">
+            <div class="container text-center">
+                <h2 class="h3 mb-4">Ready to Join the Innovation Revolution?</h2>
+                <p class="mb-4">Be part of the next big thing and start your investment journey today!</p>
+                <div class="d-flex justify-content-center gap-3">
+                    <a href="/signup" class="btn btn-primary btn-lg">Sign Up Now</a>
+                    <a href="/startups" class="btn btn-outline-primary btn-lg">Explore Startups</a>
+                </div>
+            </div>
+        </section>
     </main>
 
-    <footer class="bg-light text-center py-3 mt-5">
-        <div class="container">
-            <p>&copy; 2023 CrowdFund Innovate. All rights reserved.</p>
+    <footer class="bg-dark text-white py-4">
+        <div class="container text-center">
+            <p class="mb-0">&copy; 2023 CrowdFund Innovate. All rights reserved.</p>
         </div>
     </footer>
 
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha1/dist/js/bootstrap.bundle.min.js"></script>
+    <script>
+        // Add animation to cards on scroll
+        const observer = new IntersectionObserver((entries) => {
+            entries.forEach((entry) => {
+                if (entry.isIntersecting) {
+                    entry.target.classList.add('animate__animated', 'animate__fadeInUp');
+                }
+            });
+        }, { threshold: 0.1 });
+
+        document.querySelectorAll('.card').forEach((card) => {
+            observer.observe(card);
+        });
+    </script>
 </body>
 </html>
