@@ -1,9 +1,10 @@
-from fastapi import FastAPI, Request
+from fastapi import FastAPI, Request, Depends
 from fastapi.templating import Jinja2Templates
 from fastapi.staticfiles import StaticFiles
 from app.routers import projects, users
-from app.database import engine
+from app.database import engine, get_db
 from app.models import Base
+from sqlalchemy.orm import Session
 
 app = FastAPI(title="CrowdFund Innovate")
 
@@ -23,6 +24,11 @@ app.mount("/static", StaticFiles(directory="app/static"), name="static")
 @app.get("/")
 async def root(request: Request):
     return templates.TemplateResponse("index.html", {"request": request})
+
+@app.get("/campaigns")
+async def campaigns(request: Request, db: Session = Depends(get_db)):
+    projects = db.query(projects.models.Project).all()
+    return templates.TemplateResponse("campaigns.html", {"request": request, "projects": projects})
 
 @app.get("/api")
 async def api_root():
