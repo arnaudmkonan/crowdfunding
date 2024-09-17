@@ -12,7 +12,9 @@ def create_project(project: schemas.ProjectCreate, db: Session = Depends(get_db)
     db.add(db_project)
     db.commit()
     db.refresh(db_project)
-    return db_project
+    # Fetch the creator to include in the response
+    creator = db.query(models.User).filter(models.User.id == db_project.creator_id).first()
+    return {**db_project.__dict__, "creator": creator}
 
 @router.get("/", response_model=list[schemas.Project])
 def read_projects(skip: int = 0, limit: int = 100, db: Session = Depends(get_db)):

@@ -22,6 +22,7 @@ class Project(ProjectBase):
     current_amount: float
     created_at: datetime
     creator_id: int
+    creator: User
 
     class Config:
         orm_mode = True
