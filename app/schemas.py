@@ -1,8 +1,6 @@
 from pydantic import BaseModel, EmailStr
 from datetime import datetime
-from typing import Optional, List, ForwardRef
-
-User = ForwardRef('User')
+from typing import Optional, List
 
 class UserBase(BaseModel):
     username: str
@@ -19,21 +17,23 @@ class ProjectBase(BaseModel):
 class ProjectCreate(ProjectBase):
     creator_id: int
 
-class Project(ProjectBase):
+class ProjectInDB(ProjectBase):
     id: int
     current_amount: float
     created_at: datetime
     creator_id: int
-    creator: Optional[User] = None
 
     class Config:
         orm_mode = True
 
-Project.update_forward_refs()
-
-class User(UserBase):
+class UserInDB(UserBase):
     id: int
-    projects: List[Project] = []
 
     class Config:
         orm_mode = True
+
+class Project(ProjectInDB):
+    creator: Optional[UserInDB] = None
+
+class User(UserInDB):
+    projects: List[ProjectInDB] = []
