@@ -4,93 +4,138 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>How It Works - CrowdFund Innovate</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha1/dist/css/bootstrap.min.css" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.7.2/font/bootstrap-icons.css">
     <style>
-        /* Copy the CSS from the provided how_it_works.html */
+        .bg-primary-light {
+            background-color: #e3f2fd;
+        }
+        .step-icon {
+            width: 60px;
+            height: 60px;
+            background-color: #1e88e5;
+            color: white;
+            font-size: 1.5rem;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            border-radius: 50%;
+        }
     </style>
 </head>
 <body>
-    <header>
-        <div class="container">
-            <nav>
-                <div class="logo">CrowdFund Innovate</div>
-                <div class="nav-links">
-                    <a href="/startups">Startups</a>
-                    <a href="/how-it-works">How It Works</a>
-                    <a href="/about">About</a>
-                    <a href="/login">Login</a>
-                    <a href="/signup">Sign Up</a>
+    <header class="bg-white shadow-sm">
+        <nav class="navbar navbar-expand-lg navbar-light container">
+            <div class="container-fluid">
+                <a class="navbar-brand fw-bold text-primary" href="/">CrowdFund Innovate</a>
+                <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav">
+                    <span class="navbar-toggler-icon"></span>
+                </button>
+                <div class="collapse navbar-collapse" id="navbarNav">
+                    <ul class="navbar-nav ms-auto">
+                        <li class="nav-item"><a class="nav-link" href="/startups">Startups</a></li>
+                        <li class="nav-item"><a class="nav-link active" href="/how-it-works">How It Works</a></li>
+                        <li class="nav-item"><a class="nav-link" href="/about">About</a></li>
+                        <li class="nav-item"><a class="nav-link" href="/login">Login</a></li>
+                        <li class="nav-item"><a class="nav-link" href="/signup">Sign Up</a></li>
+                    </ul>
                 </div>
-            </nav>
-        </div>
+            </div>
+        </nav>
     </header>
 
     <main>
-        <div class="container">
-            <h1>How CrowdFund Innovate Works</h1>
-            
-            <div class="process-container">
-                <div class="process-step">
-                    <div class="step-icon">1</div>
-                    <div class="step-content">
-                        <h2 class="step-title">Discover Innovative Startups</h2>
-                        <p>Browse through our curated list of cutting-edge startups across various industries. Each startup has been carefully vetted to ensure quality and potential.</p>
-                    </div>
-                </div>
-                
-                <div class="process-step">
-                    <div class="step-icon">2</div>
-                    <div class="step-content">
-                        <h2 class="step-title">Research and Due Diligence</h2>
-                        <p>Access detailed information about each startup, including business plans, financial projections, and team bios. Make informed decisions based on comprehensive data.</p>
-                    </div>
-                </div>
-                
-                <div class="process-step">
-                    <div class="step-icon">3</div>
-                    <div class="step-content">
-                        <h2 class="step-title">Invest with Confidence</h2>
-                        <p>Choose the startups you believe in and invest as little as $100. Our secure platform ensures your investments are processed safely and efficiently.</p>
-                    </div>
-                </div>
-                
-                <div class="process-step">
-                    <div class="step-icon">4</div>
-                    <div class="step-content">
-                        <h2 class="step-title">Track Your Investments</h2>
-                        <p>Stay updated on your portfolio through our user-friendly dashboard. Receive regular updates from the startups you've invested in and watch your investments grow.</p>
-                    </div>
-                </div>
-                
-                <div class="process-step">
-                    <div class="step-icon">5</div>
-                    <div class="step-content">
-                        <h2 class="step-title">Reap the Rewards</h2>
-                        <p>As the startups succeed, so do you. Enjoy potential returns on your investments and the satisfaction of supporting innovation and entrepreneurship.</p>
-                    </div>
-                </div>
+        <section class="bg-primary text-white py-5">
+            <div class="container text-center">
+                <h1 class="display-4 fw-bold mb-3">How CrowdFund Innovate Works</h1>
+                <p class="lead">Discover the simple steps to start your investment journey</p>
             </div>
-        </div>
-        
-        <div class="cta-section">
+        </section>
+
+        <section class="py-5">
             <div class="container">
-                <h2>Ready to Start Your Investment Journey?</h2>
-                <p>Join CrowdFund Innovate today and be part of the next big innovation!</p>
-                <div class="cta-buttons">
-                    <button class="cta-btn cta-btn-primary" onclick="window.location.href='/signup'">Sign Up Now</button>
-                    <button class="cta-btn cta-btn-secondary" onclick="window.location.href='/startups'">Explore Startups</button>
+                <div class="row g-4">
+                    <div class="col-md-6 col-lg-4">
+                        <div class="card h-100 border-0 shadow-sm">
+                            <div class="card-body d-flex flex-column align-items-center text-center">
+                                <div class="step-icon mb-3">1</div>
+                                <h3 class="card-title h4 mb-3">Discover Innovative Startups</h3>
+                                <p class="card-text">Browse through our curated list of cutting-edge startups across various industries. Each startup has been carefully vetted to ensure quality and potential.</p>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="col-md-6 col-lg-4">
+                        <div class="card h-100 border-0 shadow-sm">
+                            <div class="card-body d-flex flex-column align-items-center text-center">
+                                <div class="step-icon mb-3">2</div>
+                                <h3 class="card-title h4 mb-3">Research and Due Diligence</h3>
+                                <p class="card-text">Access detailed information about each startup, including business plans, financial projections, and team bios. Make informed decisions based on comprehensive data.</p>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="col-md-6 col-lg-4">
+                        <div class="card h-100 border-0 shadow-sm">
+                            <div class="card-body d-flex flex-column align-items-center text-center">
+                                <div class="step-icon mb-3">3</div>
+                                <h3 class="card-title h4 mb-3">Invest with Confidence</h3>
+                                <p class="card-text">Choose the startups you believe in and invest as little as $100. Our secure platform ensures your investments are processed safely and efficiently.</p>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="col-md-6 col-lg-4">
+                        <div class="card h-100 border-0 shadow-sm">
+                            <div class="card-body d-flex flex-column align-items-center text-center">
+                                <div class="step-icon mb-3">4</div>
+                                <h3 class="card-title h4 mb-3">Track Your Investments</h3>
+                                <p class="card-text">Stay updated on your portfolio through our user-friendly dashboard. Receive regular updates from the startups you've invested in and watch your investments grow.</p>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="col-md-6 col-lg-4">
+                        <div class="card h-100 border-0 shadow-sm">
+                            <div class="card-body d-flex flex-column align-items-center text-center">
+                                <div class="step-icon mb-3">5</div>
+                                <h3 class="card-title h4 mb-3">Reap the Rewards</h3>
+                                <p class="card-text">As the startups succeed, so do you. Enjoy potential returns on your investments and the satisfaction of supporting innovation and entrepreneurship.</p>
+                            </div>
+                        </div>
+                    </div>
                 </div>
             </div>
-        </div>
+        </section>
+        
+        <section class="bg-primary-light py-5">
+            <div class="container text-center">
+                <h2 class="h3 mb-4">Ready to Start Your Investment Journey?</h2>
+                <p class="mb-4">Join CrowdFund Innovate today and be part of the next big innovation!</p>
+                <div class="d-flex justify-content-center gap-3">
+                    <a href="/signup" class="btn btn-primary btn-lg">Sign Up Now</a>
+                    <a href="/startups" class="btn btn-outline-primary btn-lg">Explore Startups</a>
+                </div>
+            </div>
+        </section>
     </main>
 
-    <footer>
-        <div class="container">
-            <p>&copy; 2023 CrowdFund Innovate. All rights reserved.</p>
+    <footer class="bg-dark text-white py-4">
+        <div class="container text-center">
+            <p class="mb-0">&copy; 2023 CrowdFund Innovate. All rights reserved.</p>
         </div>
     </footer>
 
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha1/dist/js/bootstrap.bundle.min.js"></script>
     <script>
-        // Copy the JavaScript from the provided how_it_works.html
+        // Add animation to cards on scroll
+        const observer = new IntersectionObserver((entries) => {
+            entries.forEach((entry) => {
+                if (entry.isIntersecting) {
+                    entry.target.classList.add('animate__animated', 'animate__fadeInUp');
+                }
+            });
+        }, { threshold: 0.1 });
+
+        document.querySelectorAll('.card').forEach((card) => {
+            observer.observe(card);
+        });
     </script>
 </body>
 </html>
