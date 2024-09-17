@@ -4,13 +4,53 @@ from fastapi.staticfiles import StaticFiles
 from fastapi.responses import RedirectResponse
 from app.routers import projects, users
 from app.database import engine, get_db
-from app.models import Base, Project
+from app.models import Base, Project, User
 from sqlalchemy.orm import Session
 
 app = FastAPI(title="CrowdFund Innovate")
 
 # Create database tables
 Base.metadata.create_all(bind=engine)
+
+def add_sample_data(db: Session):
+    # Check if there are any projects in the database
+    if db.query(Project).count() == 0:
+        # Create a sample user
+        sample_user = User(username="sample_user", email="sample@example.com", hashed_password="hashed_password")
+        db.add(sample_user)
+        db.commit()
+        db.refresh(sample_user)
+
+        # Create sample projects
+        sample_projects = [
+            Project(
+                title="EcoTech Solutions",
+                description="Revolutionizing renewable energy with cutting-edge solar technology.",
+                goal_amount=1000000,
+                current_amount=750000,
+                creator_id=sample_user.id
+            ),
+            Project(
+                title="UrbanFarm",
+                description="Transforming urban spaces into sustainable vertical farms for local food production.",
+                goal_amount=500000,
+                current_amount=300000,
+                creator_id=sample_user.id
+            ),
+            Project(
+                title="AI Education Platform",
+                description="Personalized learning experiences powered by artificial intelligence.",
+                goal_amount=750000,
+                current_amount=400000,
+                creator_id=sample_user.id
+            )
+        ]
+        db.add_all(sample_projects)
+        db.commit()
+
+# Add sample data
+with SessionLocal() as db:
+    add_sample_data(db)
 
 # Include routers
 app.include_router(users.router, prefix="/api/users", tags=["users"])
