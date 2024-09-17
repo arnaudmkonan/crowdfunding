@@ -4,6 +4,11 @@ from sqlalchemy.orm import sessionmaker
 from app.main import app
 from app.database import Base, get_db
 import pytest
+import sys
+import os
+
+# Add the parent directory to sys.path
+sys.path.append(os.path.dirname(os.path.dirname(os.path.abspath(__file__))))
 
 SQLALCHEMY_DATABASE_URL = "sqlite:///./test.db"
 
