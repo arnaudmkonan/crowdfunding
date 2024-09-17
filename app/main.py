@@ -110,5 +110,33 @@ async def about(request: Request):
     return templates.TemplateResponse("about.html", {"request": request})
 
 @app.get("/api")
-async def api_root():
-    return {"message": "Welcome to the CrowdFund Innovate API"}
+async def api_root(request: Request):
+    api_info = {
+        "version": "1.0.0",
+        "title": "CrowdFund Innovate API",
+        "description": "API for managing crowdfunding campaigns and user interactions",
+        "base_url": "/api",
+        "endpoints": [
+            {
+                "path": "/users",
+                "methods": ["GET", "POST"],
+                "description": "Manage user accounts"
+            },
+            {
+                "path": "/projects",
+                "methods": ["GET", "POST"],
+                "description": "Manage crowdfunding projects"
+            },
+            {
+                "path": "/projects/{project_id}",
+                "methods": ["GET", "PUT", "DELETE"],
+                "description": "Manage individual project details"
+            },
+            {
+                "path": "/projects/{project_id}/fund",
+                "methods": ["PUT"],
+                "description": "Fund a specific project"
+            }
+        ]
+    }
+    return templates.TemplateResponse("api.html", {"request": request, "api_info": api_info})

@@ -1,0 +1,76 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>{{ api_info.title }}</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha1/dist/css/bootstrap.min.css" rel="stylesheet">
+    <style>
+        pre {
+            background-color: #f8f9fa;
+            border: 1px solid #e9ecef;
+            border-radius: 4px;
+            padding: 15px;
+        }
+    </style>
+</head>
+<body>
+    <header class="bg-primary text-white py-3">
+        <div class="container">
+            <h1>{{ api_info.title }}</h1>
+            <p class="lead">Version: {{ api_info.version }}</p>
+        </div>
+    </header>
+
+    <main class="container my-5">
+        <section>
+            <h2>Description</h2>
+            <p>{{ api_info.description }}</p>
+        </section>
+
+        <section class="mt-5">
+            <h2>Base URL</h2>
+            <pre><code>{{ api_info.base_url }}</code></pre>
+        </section>
+
+        <section class="mt-5">
+            <h2>Endpoints</h2>
+            {% for endpoint in api_info.endpoints %}
+            <div class="card mb-3">
+                <div class="card-header">
+                    <h3 class="h5 mb-0">{{ endpoint.path }}</h3>
+                </div>
+                <div class="card-body">
+                    <p><strong>Methods:</strong> {{ ", ".join(endpoint.methods) }}</p>
+                    <p><strong>Description:</strong> {{ endpoint.description }}</p>
+                </div>
+            </div>
+            {% endfor %}
+        </section>
+
+        <section class="mt-5">
+            <h2>Authentication</h2>
+            <p>All API requests require authentication using a bearer token. Include the token in the Authorization header:</p>
+            <pre><code>Authorization: Bearer &lt;your_access_token&gt;</code></pre>
+        </section>
+
+        <section class="mt-5">
+            <h2>Rate Limiting</h2>
+            <p>API requests are limited to 100 requests per minute per IP address. If you exceed this limit, you'll receive a 429 Too Many Requests response.</p>
+        </section>
+
+        <section class="mt-5">
+            <h2>Error Handling</h2>
+            <p>The API uses standard HTTP status codes to indicate the success or failure of requests. In case of an error, the response will include a JSON object with an "error" key containing a description of the error.</p>
+        </section>
+    </main>
+
+    <footer class="bg-light py-3 mt-5">
+        <div class="container text-center">
+            <p>&copy; 2023 CrowdFund Innovate. All rights reserved.</p>
+        </div>
+    </footer>
+
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha1/dist/js/bootstrap.bundle.min.js"></script>
+</body>
+</html>
