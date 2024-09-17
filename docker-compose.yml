@@ -10,6 +10,8 @@ services:
       - rabbitmq
     environment:
       - DATABASE_URL=postgresql://user:password@db/crowdfunding
+    volumes:
+      - ./app:/app/app
 
   db:
     image: postgres:13
