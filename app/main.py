@@ -3,7 +3,7 @@ from fastapi.templating import Jinja2Templates
 from fastapi.staticfiles import StaticFiles
 from fastapi.responses import RedirectResponse
 from app.routers import projects, users
-from app.database import engine, get_db
+from app.database import engine, get_db, SessionLocal
 from app.models import Base, Project, User
 from sqlalchemy.orm import Session
 
