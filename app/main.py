@@ -30,6 +30,10 @@ async def campaigns(request: Request, db: Session = Depends(get_db)):
     projects = db.query(Project).all()
     return templates.TemplateResponse("campaigns.html", {"request": request, "projects": projects})
 
+@app.get("/startups")
+async def startups(request: Request):
+    return RedirectResponse(url="/campaigns")
+
 @app.get("/startup/{startup_id}")
 async def startup_detail(request: Request, startup_id: str):
     # In a real application, you would fetch the startup details from the database
