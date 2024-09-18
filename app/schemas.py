@@ -37,3 +37,14 @@ class Project(ProjectInDB):
 
 class User(UserInDB):
     projects: List[ProjectInDB] = []
+# Add these new schemas at the end of the file
+
+class Token(BaseModel):
+    access_token: str
+    token_type: str
+
+class TokenData(BaseModel):
+    username: Optional[str] = None
+
+class UserInDB(User):
+    hashed_password: str
