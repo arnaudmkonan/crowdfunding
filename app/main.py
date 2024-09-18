@@ -144,7 +144,7 @@ async def api_root(request: Request):
 from datetime import timedelta
 from fastapi import Depends, HTTPException, status
 from fastapi.security import OAuth2PasswordRequestForm
-from app import auth
+from app import auth, schemas
 
 # Add these new endpoints
 @app.post("/token", response_model=schemas.Token)
