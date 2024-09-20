@@ -35,6 +35,8 @@ conf = ConnectionConfig(
     USE_CREDENTIALS=True,
 )
 
+print(f"Email configuration: FROM={EMAIL_FROM}, HOST={EMAIL_HOST}, PORT={EMAIL_PORT}, USERNAME={EMAIL_USERNAME}")
+
 def create_email_verification_token(email: str) -> str:
     expire = datetime.utcnow() + timedelta(hours=TOKEN_EXPIRE_HOURS)
     to_encode = {"exp": expire, "sub": email}
@@ -61,8 +63,11 @@ async def send_email_verification(email: EmailStr, token: str):
 
     fm = FastMail(conf)
     try:
+        print(f"Attempting to send email to {email} from {EMAIL_FROM}")
         await fm.send_message(message)
+        print(f"Email sent successfully to {email}")
     except Exception as e:
+        print(f"Failed to send email: {str(e)}")
         raise HTTPException(status_code=500, detail=f"Failed to send email: {str(e)}")
 
 def verify_email_token(token: str) -> Dict[str, str]:
