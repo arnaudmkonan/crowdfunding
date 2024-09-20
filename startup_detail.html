@@ -166,6 +166,43 @@
     text-align: center;
     padding: 1rem 0;
   }
+
+  .social-share-buttons {
+    display: flex;
+    justify-content: space-between;
+    margin-top: 1rem;
+  }
+
+  .share-button {
+    display: inline-flex;
+    align-items: center;
+    padding: 0.5rem 1rem;
+    border-radius: 4px;
+    color: #fff;
+    text-decoration: none;
+    font-weight: bold;
+    transition: background-color 0.3s ease;
+  }
+
+  .share-button i {
+    margin-right: 0.5rem;
+  }
+
+  #facebook-share {
+    background-color: #3b5998;
+  }
+
+  #twitter-share {
+    background-color: #1da1f2;
+  }
+
+  #linkedin-share {
+    background-color: #0077b5;
+  }
+
+  .share-button:hover {
+    opacity: 0.9;
+  }
 </style>
 </head>
 <body>
@@ -292,6 +329,28 @@
     document.querySelector('.invest-button').addEventListener('click', function(e) {
       e.preventDefault();
       alert('Investment functionality would be implemented here, connecting to a secure payment system and user authentication.');
+    });
+
+    // Social media sharing functionality
+    function updateShareLinks() {
+      const url = encodeURIComponent(window.location.href);
+      const title = encodeURIComponent(document.title);
+      const description = encodeURIComponent("Check out this innovative startup on CrowdFund Innovate!");
+
+      document.getElementById('facebook-share').href = `https://www.facebook.com/sharer/sharer.php?u=${url}`;
+      document.getElementById('twitter-share').href = `https://twitter.com/intent/tweet?url=${url}&text=${title}`;
+      document.getElementById('linkedin-share').href = `https://www.linkedin.com/shareArticle?mini=true&url=${url}&title=${title}&summary=${description}`;
+    }
+
+    // Update share links when the page loads
+    updateShareLinks();
+
+    // Add click event listeners to share buttons
+    document.querySelectorAll('.share-button').forEach(button => {
+      button.addEventListener('click', function(e) {
+        e.preventDefault();
+        window.open(this.href, 'share-popup', 'height=350,width=600');
+      });
     });
   </script>
 </body>
