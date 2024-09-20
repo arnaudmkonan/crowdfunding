@@ -143,12 +143,7 @@ from fastapi.security import OAuth2PasswordBearer
 oauth2_scheme = OAuth2PasswordBearer(tokenUrl="token")
 
 @app.get("/dashboard")
-async def dashboard(request: Request, token: str = Depends(oauth2_scheme)):
-    try:
-        current_user = await auth.get_current_active_user(token)
-    except HTTPException:
-        return templates.TemplateResponse("login.html", {"request": request, "error": "Please log in to access the dashboard"})
-
+async def dashboard(request: Request, current_user: schemas.User = Depends(auth.get_current_active_user)):
     # Here you would fetch the user's investments and other relevant data
     # For now, we'll use dummy data
     investments = [
