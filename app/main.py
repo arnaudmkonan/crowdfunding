@@ -137,6 +137,25 @@ async def login(request: Request):
 async def about(request: Request):
     return templates.TemplateResponse("about.html", {"request": request})
 
+@app.get("/dashboard")
+async def dashboard(request: Request, current_user: schemas.User = Depends(auth.get_current_active_user)):
+    # Here you would fetch the user's investments and other relevant data
+    # For now, we'll use dummy data
+    investments = [
+        {"project_id": 1, "project_name": "EcoTech Solutions", "amount": 5000, "date": "2023-05-01", "status": "Active"},
+        {"project_id": 2, "project_name": "UrbanFarm", "amount": 3000, "date": "2023-04-15", "status": "Active"},
+    ]
+    total_invested = sum(inv["amount"] for inv in investments)
+    num_investments = len(investments)
+    
+    return templates.TemplateResponse("dashboard.html", {
+        "request": request,
+        "current_user": current_user,
+        "investments": investments,
+        "total_invested": total_invested,
+        "num_investments": num_investments
+    })
+
 @app.get("/api")
 async def api_root(request: Request):
     api_info = {
