@@ -28,6 +28,7 @@ class ProjectInDB(ProjectBase):
 
 class UserInDB(UserBase):
     id: int
+    is_verified: bool = False
 
     class Config:
         orm_mode = True
