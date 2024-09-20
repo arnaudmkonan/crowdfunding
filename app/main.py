@@ -101,6 +101,22 @@ async def startup_detail(request: Request, startup_id: str):
 async def signup(request: Request):
     return templates.TemplateResponse("sign_up.html", {"request": request})
 
+@app.get("/verify-email")
+async def verify_email(request: Request, token: str, db: Session = Depends(get_db)):
+    try:
+        payload = email.verify_email_token(token)
+        user_email = payload["email"]
+        db_user = db.query(models.User).filter(models.User.email == user_email).first()
+        if not db_user:
+            return templates.TemplateResponse("email_verification.html", {"request": request, "message": "User not found"})
+        if db_user.is_verified:
+            return templates.TemplateResponse("email_verification.html", {"request": request, "message": "Email already verified"})
+        db_user.is_verified = True
+        db.commit()
+        return templates.TemplateResponse("email_verification.html", {"request": request, "message": "Email verified successfully"})
+    except ValueError:
+        return templates.TemplateResponse("email_verification.html", {"request": request, "message": "Invalid token"})
+
 @app.get("/how-it-works")
 async def how_it_works(request: Request):
     return templates.TemplateResponse("how_it_works.html", {"request": request})

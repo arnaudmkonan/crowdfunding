@@ -1,21 +1,43 @@
-from fastapi import APIRouter, Depends, HTTPException, status
+from fastapi import APIRouter, Depends, HTTPException, status, BackgroundTasks
 from sqlalchemy.orm import Session
 from app.database import get_db
-from app import models, schemas, auth
+from app import models, schemas, auth, email
+from pydantic import EmailStr
 
 router = APIRouter()
 
 @router.post("/", response_model=schemas.User, status_code=status.HTTP_201_CREATED)
-def create_user(user: schemas.UserCreate, db: Session = Depends(get_db)):
+async def create_user(user: schemas.UserCreate, db: Session = Depends(get_db), background_tasks: BackgroundTasks):
     db_user = db.query(models.User).filter(models.User.email == user.email).first()
     if db_user:
         raise HTTPException(status_code=400, detail="Email already registered")
     hashed_password = auth.get_password_hash(user.password)
-    db_user = models.User(email=user.email, username=user.username, hashed_password=hashed_password)
+    db_user = models.User(email=user.email, username=user.username, hashed_password=hashed_password, is_verified=False)
     db.add(db_user)
     db.commit()
     db.refresh(db_user)
+    
+    # Generate and send verification email
+    token = email.create_email_verification_token(user.email)
+    background_tasks.add_task(email.send_email_verification, EmailStr(user.email), token)
+    
     return db_user
+
+@router.get("/verify-email")
+async def verify_email(token: str, db: Session = Depends(get_db)):
+    try:
+        payload = email.verify_email_token(token)
+        user_email = payload["email"]
+        db_user = db.query(models.User).filter(models.User.email == user_email).first()
+        if not db_user:
+            raise HTTPException(status_code=404, detail="User not found")
+        if db_user.is_verified:
+            return {"message": "Email already verified"}
+        db_user.is_verified = True
+        db.commit()
+        return {"message": "Email verified successfully"}
+    except ValueError:
+        raise HTTPException(status_code=400, detail="Invalid token")
 
 @router.get("/", response_model=list[schemas.User])
 def read_users(skip: int = 0, limit: int = 100, db: Session = Depends(get_db), current_user: schemas.User = Depends(auth.get_current_active_user)):
