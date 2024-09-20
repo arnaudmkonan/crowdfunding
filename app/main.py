@@ -43,6 +43,13 @@ def add_sample_data(db: Session):
                 goal_amount=750000,
                 current_amount=400000,
                 creator_id=sample_user.id
+            ),
+            Project(
+                title="HealthAI",
+                description="Using AI to revolutionize personalized healthcare and early disease detection.",
+                goal_amount=1000000,
+                current_amount=600000,
+                creator_id=sample_user.id
             )
         ]
         db.add_all(sample_projects)
@@ -63,8 +70,9 @@ templates = Jinja2Templates(directory="app/templates")
 app.mount("/static", StaticFiles(directory="app/static"), name="static")
 
 @app.get("/")
-async def root(request: Request):
-    return templates.TemplateResponse("index.html", {"request": request})
+async def root(request: Request, db: Session = Depends(get_db)):
+    projects = db.query(Project).all()
+    return templates.TemplateResponse("index.html", {"request": request, "projects": projects})
 
 @app.get("/campaigns")
 async def campaigns(request: Request, db: Session = Depends(get_db)):

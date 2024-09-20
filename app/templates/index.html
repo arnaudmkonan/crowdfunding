@@ -109,36 +109,18 @@
             <div class="container text-center">
                 <h2 class="mb-4">Featured Startups</h2>
                 <div class="row g-4">
+                    {% for project in projects[:3] %}
                     <div class="col-md-4">
                         <div class="card h-100 border-0 shadow-sm">
-                            <img src="https://via.placeholder.com/300x200.png?text=EcoTech" class="card-img-top" alt="EcoTech">
+                            <img src="https://picsum.photos/seed/{{ project.id }}/300/200" class="card-img-top" alt="{{ project.title }}">
                             <div class="card-body">
-                                <h3 class="card-title h5">EcoTech Solutions</h3>
-                                <p class="card-text">Revolutionizing renewable energy with cutting-edge solar technology.</p>
-                                <a href="#" class="btn btn-primary">Learn More</a>
+                                <h3 class="card-title h5">{{ project.title }}</h3>
+                                <p class="card-text">{{ project.description }}</p>
+                                <a href="/startup/{{ project.id }}" class="btn btn-primary">Learn More</a>
                             </div>
                         </div>
                     </div>
-                    <div class="col-md-4">
-                        <div class="card h-100 border-0 shadow-sm">
-                            <img src="https://via.placeholder.com/300x200.png?text=HealthAI" class="card-img-top" alt="HealthAI">
-                            <div class="card-body">
-                                <h3 class="card-title h5">HealthAI</h3>
-                                <p class="card-text">Using AI to revolutionize personalized healthcare and early disease detection.</p>
-                                <a href="#" class="btn btn-primary">Learn More</a>
-                            </div>
-                        </div>
-                    </div>
-                    <div class="col-md-4">
-                        <div class="card h-100 border-0 shadow-sm">
-                            <img src="https://via.placeholder.com/300x200.png?text=UrbanFarm" class="card-img-top" alt="UrbanFarm">
-                            <div class="card-body">
-                                <h3 class="card-title h5">UrbanFarm</h3>
-                                <p class="card-text">Transforming urban spaces into sustainable vertical farms for local food production.</p>
-                                <a href="#" class="btn btn-primary">Learn More</a>
-                            </div>
-                        </div>
-                    </div>
+                    {% endfor %}
                 </div>
             </div>
         </section>
