@@ -3,7 +3,7 @@ from fastapi.templating import Jinja2Templates
 from fastapi.staticfiles import StaticFiles
 from fastapi.responses import RedirectResponse
 from app.routers import projects, users
-from app import models
+from app import models, email
 from app.database import engine
 
 models.Base.metadata.create_all(bind=engine)
