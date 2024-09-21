@@ -243,15 +243,10 @@
                 });
 
                 if (response.ok) {
-                    successMessage.textContent = 'Account created successfully! Redirecting to login...';
+                    successMessage.textContent = 'Account created successfully! Please check your email to verify your account.';
                     
                     // Clear form fields
                     form.reset();
-
-                    // Redirect to login page after a short delay
-                    setTimeout(() => {
-                        window.location.href = '/login';
-                    }, 2000);
                 } else {
                     const data = await response.json();
                     errorMessage.textContent = data.detail || 'An error occurred. Please try again.';
