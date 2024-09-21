@@ -18,20 +18,29 @@ from sqlalchemy.orm import Session
 app = FastAPI(title="CrowdFund Innovate")
 
 # Add this new route for user registration
+import logging
+
+logging.basicConfig(level=logging.INFO)
+logger = logging.getLogger(__name__)
+
 @app.post("/api/users/", response_model=schemas.User, status_code=status.HTTP_201_CREATED)
 async def create_user(user: schemas.UserCreate, background_tasks: BackgroundTasks, db: Session = Depends(get_db)):
+    logger.info(f"Attempting to create user with email: {user.email}")
     db_user = db.query(models.User).filter(models.User.email == user.email).first()
     if db_user:
+        logger.warning(f"User with email {user.email} already exists")
         raise HTTPException(status_code=400, detail="Email already registered")
     hashed_password = auth.get_password_hash(user.password)
     db_user = models.User(email=user.email, username=user.username, hashed_password=hashed_password, is_verified=False)
     db.add(db_user)
     db.commit()
     db.refresh(db_user)
+    logger.info(f"User created successfully with id: {db_user.id}")
     
     # Generate and send verification email
     token = email.create_email_verification_token(user.email)
     background_tasks.add_task(email.send_email_verification, user.email, token)
+    logger.info(f"Verification email task added for user: {user.email}")
     
     return db_user
 
