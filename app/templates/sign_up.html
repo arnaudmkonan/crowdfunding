@@ -247,6 +247,15 @@
                     
                     // Clear form fields
                     form.reset();
+
+                    // Disable the form
+                    form.querySelectorAll('input, button').forEach(el => el.disabled = true);
+
+                    // Show additional message
+                    const verificationMessage = document.createElement('p');
+                    verificationMessage.textContent = 'A verification email has been sent to your email address. Please verify your email to complete the registration process.';
+                    verificationMessage.style.marginTop = '1rem';
+                    form.appendChild(verificationMessage);
                 } else {
                     const data = await response.json();
                     errorMessage.textContent = data.detail || 'An error occurred. Please try again.';
