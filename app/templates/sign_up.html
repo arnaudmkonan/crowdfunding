@@ -212,7 +212,7 @@
         form.addEventListener('submit', async (e) => {
             e.preventDefault();
             
-            const fullName = document.getElementById('full-name').value;
+            const username = document.getElementById('full-name').value;
             const email = document.getElementById('email').value;
             const password = document.getElementById('password').value;
             const confirmPassword = document.getElementById('confirm-password').value;
@@ -232,22 +232,30 @@
                 return;
             }
 
-            // Simulate API call for user registration
+            // Send API call for user registration
             try {
-                // In a real application, this would be an API call to your backend
-                await new Promise(resolve => setTimeout(resolve, 1000)); // Simulating network delay
+                const response = await fetch('/api/users/', {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json',
+                    },
+                    body: JSON.stringify({ username, email, password }),
+                });
 
-                // Simulating a successful registration
-                successMessage.textContent = 'Account created successfully! Redirecting to login...';
-                
-                // Clear form fields
-                form.reset();
+                if (response.ok) {
+                    successMessage.textContent = 'Account created successfully! Redirecting to login...';
+                    
+                    // Clear form fields
+                    form.reset();
 
-                // Redirect to login page after a short delay
-                setTimeout(() => {
-                    window.location.href = '/login';
-                }, 2000);
-
+                    // Redirect to login page after a short delay
+                    setTimeout(() => {
+                        window.location.href = '/login';
+                    }, 2000);
+                } else {
+                    const data = await response.json();
+                    errorMessage.textContent = data.detail || 'An error occurred. Please try again.';
+                }
             } catch (error) {
                 errorMessage.textContent = 'An error occurred. Please try again.';
             }

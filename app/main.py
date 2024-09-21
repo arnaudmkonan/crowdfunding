@@ -1,13 +1,13 @@
-from fastapi import FastAPI, Request, Depends,HTTPException, status
+from fastapi import FastAPI, Request, Depends, HTTPException, status, BackgroundTasks
 from fastapi.templating import Jinja2Templates
 from fastapi.staticfiles import StaticFiles
 from fastapi.responses import RedirectResponse
 from datetime import timedelta
 from fastapi.security import OAuth2PasswordRequestForm, OAuth2PasswordBearer
 
-from app import auth, schemas
+from app import auth, schemas, email
 from app.routers import projects, users
-from app import models, email, schemas, auth
+from app import models, schemas, auth
 from app.database import engine
 
 models.Base.metadata.create_all(bind=engine)
@@ -16,6 +16,24 @@ from app.models import Base, Project, User
 from sqlalchemy.orm import Session
 
 app = FastAPI(title="CrowdFund Innovate")
+
+# Add this new route for user registration
+@app.post("/api/users/", response_model=schemas.User, status_code=status.HTTP_201_CREATED)
+async def create_user(user: schemas.UserCreate, background_tasks: BackgroundTasks, db: Session = Depends(get_db)):
+    db_user = db.query(models.User).filter(models.User.email == user.email).first()
+    if db_user:
+        raise HTTPException(status_code=400, detail="Email already registered")
+    hashed_password = auth.get_password_hash(user.password)
+    db_user = models.User(email=user.email, username=user.username, hashed_password=hashed_password, is_verified=False)
+    db.add(db_user)
+    db.commit()
+    db.refresh(db_user)
+    
+    # Generate and send verification email
+    token = email.create_email_verification_token(user.email)
+    background_tasks.add_task(email.send_email_verification, user.email, token)
+    
+    return db_user
 
 # Create database tables
 Base.metadata.create_all(bind=engine)
