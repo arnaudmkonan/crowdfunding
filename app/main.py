@@ -1,7 +1,11 @@
-from fastapi import FastAPI, Request, Depends
+from fastapi import FastAPI, Request, Depends,HTTPException, status
 from fastapi.templating import Jinja2Templates
 from fastapi.staticfiles import StaticFiles
 from fastapi.responses import RedirectResponse
+from datetime import timedelta
+from fastapi.security import OAuth2PasswordRequestForm, OAuth2PasswordBearer
+
+from app import auth, schemas
 from app.routers import projects, users
 from app import models, email, schemas, auth
 from app.database import engine
@@ -137,8 +141,6 @@ async def login(request: Request):
 async def about(request: Request):
     return templates.TemplateResponse("about.html", {"request": request})
 
-from fastapi import Depends, HTTPException, status
-from fastapi.security import OAuth2PasswordBearer
 
 oauth2_scheme = OAuth2PasswordBearer(tokenUrl="token")
 
@@ -192,11 +194,7 @@ async def api_root(request: Request):
         ]
     }
     return templates.TemplateResponse("api.html", {"request": request, "api_info": api_info})
-# Add these imports at the top of the file
-from datetime import timedelta
-from fastapi import Depends, HTTPException, status
-from fastapi.security import OAuth2PasswordRequestForm
-from app import auth, schemas
+
 
 # Add these new endpoints
 @app.post("/token", response_model=schemas.Token)
