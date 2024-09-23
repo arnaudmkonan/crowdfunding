@@ -173,22 +173,28 @@ oauth2_scheme = OAuth2PasswordBearer(tokenUrl="token")
 
 @app.get("/dashboard")
 async def dashboard(request: Request, current_user: schemas.User = Depends(auth.get_current_active_user)):
-    # Here you would fetch the user's investments and other relevant data
-    # For now, we'll use dummy data
-    investments = [
-        {"project_id": 1, "project_name": "EcoTech Solutions", "amount": 5000, "date": "2023-05-01", "status": "Active"},
-        {"project_id": 2, "project_name": "UrbanFarm", "amount": 3000, "date": "2023-04-15", "status": "Active"},
-    ]
-    total_invested = sum(inv["amount"] for inv in investments)
-    num_investments = len(investments)
-    
-    return templates.TemplateResponse("dashboard.html", {
-        "request": request,
-        "current_user": current_user,
-        "investments": investments,
-        "total_invested": total_invested,
-        "num_investments": num_investments
-    })
+    try:
+        # Here you would fetch the user's investments and other relevant data
+        # For now, we'll use dummy data
+        investments = [
+            {"project_id": 1, "project_name": "EcoTech Solutions", "amount": 5000, "date": "2023-05-01", "status": "Active"},
+            {"project_id": 2, "project_name": "UrbanFarm", "amount": 3000, "date": "2023-04-15", "status": "Active"},
+        ]
+        total_invested = sum(inv["amount"] for inv in investments)
+        num_investments = len(investments)
+        
+        print(f"Dashboard accessed by user: {current_user.id}, {current_user.username}")  # Add this line for debugging
+        
+        return templates.TemplateResponse("dashboard.html", {
+            "request": request,
+            "current_user": current_user,
+            "investments": investments,
+            "total_invested": total_invested,
+            "num_investments": num_investments
+        })
+    except Exception as e:
+        print(f"Error in dashboard: {str(e)}")  # Add this line for debugging
+        raise HTTPException(status_code=500, detail="Internal server error")
 
 @app.get("/api")
 async def api_root(request: Request):
@@ -237,6 +243,7 @@ async def login_for_access_token(form_data: OAuth2PasswordRequestForm = Depends(
     access_token = auth.create_access_token(
         data={"sub": user.username}, expires_delta=access_token_expires
     )
+    print(f"User authenticated: {user.id}, {user.username}")  # Add this line for debugging
     return {"access_token": access_token, "token_type": "bearer"}
 
 @app.get("/users/me", response_model=schemas.User)

@@ -16,6 +16,7 @@ async def create_user(user: schemas.UserCreate, db: Session = Depends(get_db)):
     db.add(db_user)
     db.commit()
     db.refresh(db_user)
+    print(f"User created: {db_user.id}, {db_user.username}, {db_user.email}")  # Add this line for debugging
     return db_user
 
 @router.get("/verify-email")
