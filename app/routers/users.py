@@ -7,20 +7,15 @@ from pydantic import EmailStr
 router = APIRouter()
 
 @router.post("/", response_model=schemas.User, status_code=status.HTTP_201_CREATED)
-async def create_user(user: schemas.UserCreate, background_tasks: BackgroundTasks, db: Session = Depends(get_db)):
+async def create_user(user: schemas.UserCreate, db: Session = Depends(get_db)):
     db_user = db.query(models.User).filter(models.User.email == user.email).first()
     if db_user:
         raise HTTPException(status_code=400, detail="Email already registered")
     hashed_password = auth.get_password_hash(user.password)
-    db_user = models.User(email=user.email, username=user.username, hashed_password=hashed_password, is_verified=False)
+    db_user = models.User(email=user.email, username=user.username, hashed_password=hashed_password, is_verified=True)
     db.add(db_user)
     db.commit()
     db.refresh(db_user)
-    
-    # Generate and send verification email
-    token = email.create_email_verification_token(user.email)
-    background_tasks.add_task(email.send_email_verification, EmailStr(user.email), token)
-    
     return db_user
 
 @router.get("/verify-email")

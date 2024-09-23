@@ -15,7 +15,7 @@ class User(Base):
     username = Column(String, unique=True, index=True)
     email = Column(String, unique=True, index=True)
     hashed_password = Column(String)
-    is_verified = Column(Boolean, default=False)
+    is_verified = Column(Boolean, default=True)
     projects = relationship("Project", back_populates="creator")
 
 class Project(Base):
