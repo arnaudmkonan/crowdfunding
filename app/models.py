@@ -3,10 +3,16 @@ from sqlalchemy.orm import relationship
 from app.database import Base
 import datetime
 
-from sqlalchemy import Boolean, Column, Integer, String, Float, ForeignKey, DateTime
+from sqlalchemy import Boolean, Column, Integer, String, Float, ForeignKey, DateTime, Enum
 from sqlalchemy.orm import relationship
 from app.database import Base
 import datetime
+import enum
+
+class UserRole(enum.Enum):
+    INVESTOR = "investor"
+    ENTREPRENEUR = "entrepreneur"
+    ADMIN = "admin"
 
 class User(Base):
     __tablename__ = "users"
@@ -15,17 +21,53 @@ class User(Base):
     username = Column(String, unique=True, index=True)
     email = Column(String, unique=True, index=True)
     hashed_password = Column(String)
-    is_verified = Column(Boolean, default=True)
-    projects = relationship("Project", back_populates="creator")
+    is_verified = Column(Boolean, default=False)
+    role = Column(Enum(UserRole), default=UserRole.INVESTOR)
+    created_at = Column(DateTime, default=datetime.datetime.utcnow)
+    
+    # Relationships
+    company = relationship("Company", back_populates="owner", uselist=False)
+    investments = relationship("Investment", back_populates="investor")
 
-class Project(Base):
-    __tablename__ = "projects"
+class Company(Base):
+    __tablename__ = "companies"
+
+    id = Column(Integer, primary_key=True, index=True)
+    name = Column(String, unique=True, index=True)
+    description = Column(String)
+    owner_id = Column(Integer, ForeignKey("users.id"))
+    created_at = Column(DateTime, default=datetime.datetime.utcnow)
+
+    # Relationships
+    owner = relationship("User", back_populates="company")
+    campaigns = relationship("Campaign", back_populates="company")
+
+class Campaign(Base):
+    __tablename__ = "campaigns"
 
     id = Column(Integer, primary_key=True, index=True)
     title = Column(String, index=True)
     description = Column(String)
     goal_amount = Column(Float)
     current_amount = Column(Float, default=0)
-    creator_id = Column(Integer, ForeignKey("users.id"))
+    company_id = Column(Integer, ForeignKey("companies.id"))
+    start_date = Column(DateTime, default=datetime.datetime.utcnow)
+    end_date = Column(DateTime)
+    status = Column(String, default="active")  # active, completed, cancelled
+
+    # Relationships
+    company = relationship("Company", back_populates="campaigns")
+    investments = relationship("Investment", back_populates="campaign")
+
+class Investment(Base):
+    __tablename__ = "investments"
+
+    id = Column(Integer, primary_key=True, index=True)
+    amount = Column(Float)
+    investor_id = Column(Integer, ForeignKey("users.id"))
+    campaign_id = Column(Integer, ForeignKey("campaigns.id"))
     created_at = Column(DateTime, default=datetime.datetime.utcnow)
-    creator = relationship("User", back_populates="projects")
+
+    # Relationships
+    investor = relationship("User", back_populates="investments")
+    campaign = relationship("Campaign", back_populates="investments")

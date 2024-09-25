@@ -12,7 +12,7 @@ async def create_user(user: schemas.UserCreate, db: Session = Depends(get_db)):
     if db_user:
         raise HTTPException(status_code=400, detail="Email already registered")
     hashed_password = auth.get_password_hash(user.password)
-    db_user = models.User(email=user.email, username=user.username, hashed_password=hashed_password, is_verified=True)
+    db_user = models.User(email=user.email, username=user.username, hashed_password=hashed_password, is_verified=False, role=user.role)
     db.add(db_user)
     db.commit()
     db.refresh(db_user)
@@ -46,3 +46,30 @@ def read_user(user_id: int, db: Session = Depends(get_db), current_user: schemas
     if db_user is None:
         raise HTTPException(status_code=404, detail="User not found")
     return db_user
+
+@router.put("/{user_id}", response_model=schemas.User)
+def update_user(user_id: int, user: schemas.UserCreate, db: Session = Depends(get_db), current_user: schemas.User = Depends(auth.get_current_active_user)):
+    db_user = db.query(models.User).filter(models.User.id == user_id).first()
+    if db_user is None:
+        raise HTTPException(status_code=404, detail="User not found")
+    if current_user.id != user_id and current_user.role != schemas.UserRole.ADMIN:
+        raise HTTPException(status_code=403, detail="Not authorized to update this user")
+    for key, value in user.dict().items():
+        if key != "password":
+            setattr(db_user, key, value)
+    if user.password:
+        db_user.hashed_password = auth.get_password_hash(user.password)
+    db.commit()
+    db.refresh(db_user)
+    return db_user
+
+@router.delete("/{user_id}", status_code=status.HTTP_204_NO_CONTENT)
+def delete_user(user_id: int, db: Session = Depends(get_db), current_user: schemas.User = Depends(auth.get_current_active_user)):
+    if current_user.role != schemas.UserRole.ADMIN:
+        raise HTTPException(status_code=403, detail="Not authorized to delete users")
+    db_user = db.query(models.User).filter(models.User.id == user_id).first()
+    if db_user is None:
+        raise HTTPException(status_code=404, detail="User not found")
+    db.delete(db_user)
+    db.commit()
+    return {"message": "User deleted successfully"}
