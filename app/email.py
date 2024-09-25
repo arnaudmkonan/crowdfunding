@@ -6,6 +6,9 @@ from datetime import datetime, timedelta
 from typing import Dict
 from fastapi import HTTPException
 from dotenv import load_dotenv
+import logging
+
+logging.basicConfig(level=logging.DEBUG)
 
 # Load environment variables from .env file
 load_dotenv()
