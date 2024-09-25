@@ -144,14 +144,21 @@ async def verify_email(request: Request, token: str, db: Session = Depends(get_d
         user_email = payload["email"]
         db_user = db.query(models.User).filter(models.User.email == user_email).first()
         if not db_user:
-            return templates.TemplateResponse("email_verification.html", {"request": request, "message": "User not found"})
+            logger.warning(f"User not found for email: {user_email}")
+            return templates.TemplateResponse("email_verification.html", {"request": request, "message": "User not found", "status": "error"})
         if db_user.is_verified:
-            return templates.TemplateResponse("email_verification.html", {"request": request, "message": "Email already verified"})
+            logger.info(f"Email already verified for user: {user_email}")
+            return templates.TemplateResponse("email_verification.html", {"request": request, "message": "Email already verified", "status": "info"})
         db_user.is_verified = True
         db.commit()
-        return templates.TemplateResponse("email_verification.html", {"request": request, "message": "Email verified successfully"})
-    except ValueError:
-        return templates.TemplateResponse("email_verification.html", {"request": request, "message": "Invalid token"})
+        logger.info(f"Email verified successfully for user: {user_email}")
+        return templates.TemplateResponse("email_verification.html", {"request": request, "message": "Email verified successfully", "status": "success"})
+    except ValueError as e:
+        logger.error(f"Invalid token: {str(e)}")
+        return templates.TemplateResponse("email_verification.html", {"request": request, "message": "Invalid or expired token", "status": "error"})
+    except Exception as e:
+        logger.error(f"Error during email verification: {str(e)}")
+        return templates.TemplateResponse("email_verification.html", {"request": request, "message": "An error occurred during verification", "status": "error"})
 
 @app.get("/how-it-works")
 async def how_it_works(request: Request):
