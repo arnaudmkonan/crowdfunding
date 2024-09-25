@@ -11,7 +11,15 @@ from app.routers import projects, users
 from app import models, schemas, auth
 from app.database import engine
 
+import logging
+
+logging.basicConfig(level=logging.INFO)
+logger = logging.getLogger(__name__)
+
+logger.info("Creating database tables...")
 models.Base.metadata.create_all(bind=engine)
+logger.info("Database tables created successfully")
+
 from app.database import engine, get_db, SessionLocal
 from app.models import Base, Project, User
 from sqlalchemy.orm import Session
@@ -49,8 +57,10 @@ async def create_user(user: schemas.UserCreate, background_tasks: BackgroundTask
 Base.metadata.create_all(bind=engine)
 
 def add_sample_data(db: Session):
+    logger.info("Checking if sample data needs to be added...")
     # Check if there are any projects in the database
     if db.query(Project).count() == 0:
+        logger.info("No existing projects found. Adding sample data...")
         # Create sample users
         sample_user1 = User(username="sample_user", email="sample@example.com", hashed_password="hashed_password")
         sample_user2 = User(username="test_user", email="test@example.com", hashed_password="hashed_password")
@@ -59,6 +69,7 @@ def add_sample_data(db: Session):
         db.commit()
         db.refresh(sample_user1)
         db.refresh(sample_user2)
+        logger.info(f"Sample users created: {sample_user1.id}, {sample_user2.id}")
 
         # Create sample projects
         sample_projects = [
@@ -93,10 +104,15 @@ def add_sample_data(db: Session):
         ]
         db.add_all(sample_projects)
         db.commit()
+        logger.info(f"Sample projects created: {len(sample_projects)}")
+    else:
+        logger.info("Sample data already exists. Skipping sample data creation.")
 
 # Add sample data
+logger.info("Initializing database session to add sample data...")
 with SessionLocal() as db:
     add_sample_data(db)
+logger.info("Sample data addition process completed.")
 
 # Include routers
 app.include_router(users.router, prefix="/api/users", tags=["users"])
