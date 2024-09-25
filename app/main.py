@@ -241,8 +241,8 @@ async def api_root(request: Request):
 
 
 # Add these new endpoints
-@app.post("/token", response_model=schemas.TokenResponse)
-async def login_for_access_token(form_data: OAuth2PasswordRequestForm = Depends(), db: Session = Depends(get_db)):
+@app.post("/token")
+async def login_for_access_token(response: Response, form_data: OAuth2PasswordRequestForm = Depends(), db: Session = Depends(get_db)):
     user = auth.authenticate_user(db, form_data.username, form_data.password)
     if not user:
         raise HTTPException(
@@ -252,8 +252,9 @@ async def login_for_access_token(form_data: OAuth2PasswordRequestForm = Depends(
         )
     access_token = auth.create_access_token(data={"sub": user.username})
     refresh_token = auth.create_refresh_token(data={"sub": user.username})
-    print(f"User authenticated: {user.id}, {user.username}")  # Add this line for debugging
-    return {"access_token": access_token, "refresh_token": refresh_token, "token_type": "bearer"}
+    print(f"User authenticated: {user.id}, {user.username}")
+    response.set_cookie(key="access_token", value=f"Bearer {access_token}", httponly=True)
+    return {"message": "Login successful"}
 
 @app.post("/token/refresh", response_model=schemas.TokenResponse)
 async def refresh_token(refresh_token: str = Depends(oauth2_scheme), db: Session = Depends(get_db)):
@@ -276,24 +277,39 @@ async def read_users_me(current_user: schemas.User = Depends(auth.get_current_ac
     return current_user
 
 @app.get("/dashboard")
-async def dashboard(request: Request, current_user: schemas.User = Depends(auth.get_current_active_user), db: Session = Depends(get_db)):
+async def dashboard(request: Request, db: Session = Depends(get_db)):
+    token = request.cookies.get("access_token")
+    if not token:
+        return RedirectResponse(url="/login")
+    
     try:
+        payload = jwt.decode(token, auth.SECRET_KEY, algorithms=[auth.ALGORITHM])
+        username: str = payload.get("sub")
+        if username is None:
+            return RedirectResponse(url="/login")
+        
+        user = db.query(models.User).filter(models.User.username == username).first()
+        if user is None:
+            return RedirectResponse(url="/login")
+        
         # Fetch user's investments
-        investments = db.query(models.Project).filter(models.Project.creator_id == current_user.id).all()
+        investments = db.query(models.Project).filter(models.Project.creator_id == user.id).all()
         
         # Calculate total invested and number of investments
         total_invested = sum(inv.current_amount for inv in investments)
         num_investments = len(investments)
         
-        print(f"Dashboard accessed by user: {current_user.id}, {current_user.username}")
+        print(f"Dashboard accessed by user: {user.id}, {user.username}")
         
         return templates.TemplateResponse("dashboard.html", {
             "request": request,
-            "current_user": current_user,
+            "current_user": user,
             "investments": investments,
             "total_invested": total_invested,
             "num_investments": num_investments
         })
+    except JWTError:
+        return RedirectResponse(url="/login")
     except Exception as e:
         print(f"Error in dashboard: {str(e)}")
         raise HTTPException(status_code=500, detail="Internal server error")

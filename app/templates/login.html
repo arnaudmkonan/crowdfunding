@@ -202,17 +202,24 @@
             // Clear previous error messages
             errorMessage.textContent = '';
 
-            // Simulate API call for user login
             try {
-                // In a real application, this would be an API call to your backend
-                await new Promise(resolve => setTimeout(resolve, 1000)); // Simulating network delay
+                const response = await fetch('/token', {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/x-www-form-urlencoded',
+                    },
+                    body: `username=${encodeURIComponent(email)}&password=${encodeURIComponent(password)}`,
+                });
 
-                // Simulating a successful login
-                console.log('Login successful');
-                window.location.href = '/dashboard'; // Redirect to dashboard after successful login
-
+                if (response.ok) {
+                    console.log('Login successful');
+                    window.location.href = '/dashboard';
+                } else {
+                    const data = await response.json();
+                    errorMessage.textContent = data.detail || 'Invalid email or password. Please try again.';
+                }
             } catch (error) {
-                errorMessage.textContent = 'Invalid email or password. Please try again.';
+                errorMessage.textContent = 'An error occurred. Please try again.';
             }
         });
     </script>
