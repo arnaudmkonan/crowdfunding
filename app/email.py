@@ -7,6 +7,7 @@ from typing import Dict
 from fastapi import HTTPException
 from dotenv import load_dotenv
 import logging
+import ssl
 
 # Set up logging
 logger = logging.getLogger(__name__)
@@ -37,9 +38,11 @@ conf = ConnectionConfig(
     MAIL_FROM=EMAIL_FROM,
     MAIL_PORT=EMAIL_PORT,
     MAIL_SERVER=EMAIL_HOST,
-    MAIL_STARTTLS=True,
-    MAIL_SSL_TLS=False,
+    MAIL_STARTTLS=False,
+    MAIL_SSL_TLS=True,
     USE_CREDENTIALS=True,
+    VALIDATE_CERTS=True,
+    TIMEOUT=60,
 )
 
 logger.info(f"Email configuration: FROM={EMAIL_FROM}, HOST={EMAIL_HOST}, PORT={EMAIL_PORT}, USERNAME={EMAIL_USERNAME}")
@@ -75,6 +78,12 @@ async def send_email_verification(email: EmailStr, token: str):
         logger.info(f"Attempting to send email to {email} from {EMAIL_FROM}")
         await fm.send_message(message)
         logger.info(f"Email sent successfully to {email}")
+    except ssl.SSLError as e:
+        logger.error(f"SSL Error when sending email: {str(e)}")
+        raise HTTPException(status_code=500, detail=f"SSL Error when sending email: {str(e)}")
+    except TimeoutError as e:
+        logger.error(f"Timeout error when sending email: {str(e)}")
+        raise HTTPException(status_code=500, detail=f"Timeout error when sending email: {str(e)}")
     except Exception as e:
         logger.error(f"Failed to send email: {str(e)}")
         raise HTTPException(status_code=500, detail=f"Failed to send email: {str(e)}")
