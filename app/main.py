@@ -51,11 +51,14 @@ Base.metadata.create_all(bind=engine)
 def add_sample_data(db: Session):
     # Check if there are any projects in the database
     if db.query(Project).count() == 0:
-        # Create a sample user
-        sample_user = User(username="sample_user", email="sample@example.com", hashed_password="hashed_password")
-        db.add(sample_user)
+        # Create sample users
+        sample_user1 = User(username="sample_user", email="sample@example.com", hashed_password="hashed_password")
+        sample_user2 = User(username="test_user", email="test@example.com", hashed_password="hashed_password")
+        db.add(sample_user1)
+        db.add(sample_user2)
         db.commit()
-        db.refresh(sample_user)
+        db.refresh(sample_user1)
+        db.refresh(sample_user2)
 
         # Create sample projects
         sample_projects = [
