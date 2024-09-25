@@ -10,7 +10,7 @@ import logging
 sys.path.append(os.path.dirname(os.path.dirname(os.path.abspath(__file__))))
 
 # Import your models here
-from models import Base  # Adjust this import based on your project structure
+from app.models import Base
 
 # this is the Alembic Config object, which provides
 # access to the values within the .ini file in use.
@@ -30,7 +30,7 @@ if config.config_file_name is not None:
 target_metadata = Base.metadata  # This line is crucial
 
 def get_url():
-    return os.getenv("DATABASE_URL")
+    return os.getenv("DATABASE_URL", "postgresql://user:password@db/crowdfunding")
 
 # Set the sqlalchemy.url in the alembic section
 config.set_main_option("sqlalchemy.url", get_url())
