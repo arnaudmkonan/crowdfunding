@@ -67,28 +67,28 @@ def add_sample_data(db: Session):
                 description="Revolutionizing renewable energy with cutting-edge solar technology.",
                 goal_amount=1000000,
                 current_amount=750000,
-                creator_id=sample_user.id
+                creator_id=sample_user1.id
             ),
             Project(
                 title="UrbanFarm",
                 description="Transforming urban spaces into sustainable vertical farms for local food production.",
                 goal_amount=500000,
                 current_amount=300000,
-                creator_id=sample_user.id
+                creator_id=sample_user1.id
             ),
             Project(
                 title="AI Education Platform",
                 description="Personalized learning experiences powered by artificial intelligence.",
                 goal_amount=750000,
                 current_amount=400000,
-                creator_id=sample_user.id
+                creator_id=sample_user2.id
             ),
             Project(
                 title="HealthAI",
                 description="Using AI to revolutionize personalized healthcare and early disease detection.",
                 goal_amount=1000000,
                 current_amount=600000,
-                creator_id=sample_user.id
+                creator_id=sample_user2.id
             )
         ]
         db.add_all(sample_projects)
