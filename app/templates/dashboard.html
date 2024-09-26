@@ -62,19 +62,19 @@
                 <table class="table table-striped">
                     <thead>
                         <tr>
-                            <th>Project</th>
+                            <th>Campaign</th>
                             <th>Amount Invested</th>
                             <th>Date</th>
-                            <th>Status</th>
+                            <th>Campaign Status</th>
                         </tr>
                     </thead>
                     <tbody>
                         {% for investment in investments %}
                         <tr>
-                            <td><a href="/campaign/{{ investment.project_id }}">{{ investment.project_name }}</a></td>
-                            <td>${{ investment.amount }}</td>
-                            <td>{{ investment.date }}</td>
-                            <td>{{ investment.status }}</td>
+                            <td><a href="/campaign/{{ investment.campaign.id }}">{{ investment.campaign.title }}</a></td>
+                            <td>${{ "{:,.2f}".format(investment.amount) }}</td>
+                            <td>{{ investment.created_at.strftime('%Y-%m-%d') }}</td>
+                            <td>{{ investment.campaign.status }}</td>
                         </tr>
                         {% endfor %}
                     </tbody>

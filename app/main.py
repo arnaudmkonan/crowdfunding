@@ -262,3 +262,19 @@ async def invest_in_campaign(
     return RedirectResponse(url=f"/campaign/{campaign_id}", status_code=303)
 
 # ... (keep the rest of the routes as they are)
+@app.get("/dashboard")
+async def dashboard(request: Request, db: Session = Depends(get_db), current_user: schemas.User = Depends(auth.get_current_active_user)):
+    if current_user.role != schemas.UserRole.INVESTOR:
+        raise HTTPException(status_code=403, detail="Access denied. Investors only.")
+    
+    investments = db.query(models.Investment).filter(models.Investment.investor_id == current_user.id).all()
+    total_invested = sum(investment.amount for investment in investments)
+    num_investments = len(investments)
+    
+    return templates.TemplateResponse("dashboard.html", {
+        "request": request,
+        "current_user": current_user,
+        "investments": investments,
+        "total_invested": total_invested,
+        "num_investments": num_investments
+    })
