@@ -222,7 +222,7 @@ async def campaign_detail(request: Request, campaign_id: int, db: Session = Depe
     company = db.query(models.Company).filter(models.Company.id == campaign.company_id).first()
     
     # Calculate progress percentage
-    progress_percentage = (campaign.current_amount / campaign.goal_amount) * 100
+    progress_percentage = (campaign.current_amount / campaign.goal_amount) * 100 if campaign.goal_amount > 0 else 0
     
     return templates.TemplateResponse("campaign_detail.html", {
         "request": request, 
