@@ -7,7 +7,8 @@ from fastapi.security import OAuth2PasswordRequestForm, OAuth2PasswordBearer
 from jose import jwt, JWTError
 from app.schemas import UserRole
 
-from app import auth, schemas, email
+from app import auth, schemas
+from app import email as email_module
 from app.auth import SECRET_KEY, ALGORITHM
 from app.routers import campaigns, users, companies, investments
 from app import models, schemas, auth
@@ -223,11 +224,11 @@ async def reset_password(request: Request):
     return templates.TemplateResponse("reset_password.html", {"request": request})
 
 @app.post("/reset-password")
-async def reset_password_request(request: Request, email: str = Form(...), background_tasks: BackgroundTasks = BackgroundTasks(), db: Session = Depends(get_db)):
-    user = db.query(models.User).filter(models.User.email == email).first()
+async def reset_password_request(request: Request, email_address: str = Form(...), background_tasks: BackgroundTasks = BackgroundTasks(), db: Session = Depends(get_db)):
+    user = db.query(models.User).filter(models.User.email == email_address).first()
     if user:
-        token = auth.create_password_reset_token(email)
-        background_tasks.add_task(email.send_password_reset_email, email, token)
+        token = auth.create_password_reset_token(email_address)
+        background_tasks.add_task(email_module.send_password_reset_email, email_address, token)
     return {"message": "If an account with that email exists, a password reset link has been sent."}
 
 @app.get("/reset-password/{token}")
