@@ -184,4 +184,8 @@ async def campaign_detail(request: Request, campaign_id: int, db: Session = Depe
 async def how_it_works(request: Request):
     return templates.TemplateResponse("how_it_works.html", {"request": request})
 
+@app.get("/signup")
+async def signup(request: Request):
+    return templates.TemplateResponse("sign_up.html", {"request": request})
+
 # ... (keep the rest of the routes as they are)
