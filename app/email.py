@@ -100,3 +100,26 @@ def verify_email_token(token: str) -> Dict[str, str]:
     except JWTError as e:
         logger.error(f"Failed to verify email token: {str(e)}")
         raise HTTPException(status_code=400, detail="Invalid or expired token")
+
+async def send_password_reset_email(email: EmailStr, token: str):
+    reset_url = f"{BASE_URL}/reset-password/{token}"
+    
+    html = f"""
+    <p>Please click the link below to reset your password:</p>
+    <p><a href="{reset_url}">{reset_url}</a></p>
+    """
+
+    message = MessageSchema(
+        subject="Reset your password",
+        recipients=[email],
+        body=html,
+        subtype="html"
+    )
+
+    fm = FastMail(conf)
+    try:
+        await fm.send_message(message)
+        logger.info(f"Password reset email sent successfully to {email}")
+    except Exception as e:
+        logger.error(f"Failed to send password reset email: {str(e)}")
+        raise HTTPException(status_code=500, detail=f"Failed to send password reset email: {str(e)}")

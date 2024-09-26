@@ -218,6 +218,34 @@ async def signup(request: Request):
 async def login(request: Request):
     return templates.TemplateResponse("login.html", {"request": request})
 
+@app.get("/reset-password")
+async def reset_password(request: Request):
+    return templates.TemplateResponse("reset_password.html", {"request": request})
+
+@app.post("/reset-password")
+async def reset_password_request(request: Request, email: str = Form(...), background_tasks: BackgroundTasks = BackgroundTasks(), db: Session = Depends(get_db)):
+    user = db.query(models.User).filter(models.User.email == email).first()
+    if user:
+        token = auth.create_password_reset_token(email)
+        background_tasks.add_task(email.send_password_reset_email, email, token)
+    return {"message": "If an account with that email exists, a password reset link has been sent."}
+
+@app.get("/reset-password/{token}")
+async def reset_password_form(request: Request, token: str):
+    return templates.TemplateResponse("reset_password_form.html", {"request": request, "token": token})
+
+@app.post("/reset-password/{token}")
+async def reset_password_submit(token: str, new_password: str = Form(...), db: Session = Depends(get_db)):
+    email = auth.verify_password_reset_token(token)
+    if not email:
+        raise HTTPException(status_code=400, detail="Invalid or expired token")
+    user = db.query(models.User).filter(models.User.email == email).first()
+    if not user:
+        raise HTTPException(status_code=404, detail="User not found")
+    user.hashed_password = auth.get_password_hash(new_password)
+    db.commit()
+    return {"message": "Password has been reset successfully"}
+
 @app.get("/about")
 async def about(request: Request):
     return templates.TemplateResponse("about.html", {"request": request})

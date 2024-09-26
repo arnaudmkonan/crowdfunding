@@ -70,3 +70,19 @@ async def get_current_active_user(current_user: schemas.User = Depends(get_curre
     if not current_user.is_verified:
         raise HTTPException(status_code=400, detail="Inactive user")
     return current_user
+
+def create_password_reset_token(email: str) -> str:
+    expire = datetime.utcnow() + timedelta(hours=1)
+    to_encode = {"exp": expire, "sub": email, "type": "password_reset"}
+    encoded_jwt = jwt.encode(to_encode, SECRET_KEY, algorithm=ALGORITHM)
+    return encoded_jwt
+
+def verify_password_reset_token(token: str) -> Optional[str]:
+    try:
+        payload = jwt.decode(token, SECRET_KEY, algorithms=[ALGORITHM])
+        if payload.get("type") != "password_reset":
+            return None
+        email: str = payload.get("sub")
+        return email
+    except JWTError:
+        return None
