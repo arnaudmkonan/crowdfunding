@@ -212,11 +212,11 @@ async def login(request: Request):
 async def about(request: Request):
     return templates.TemplateResponse("about.html", {"request": request})
 
-@app.get("/startup/{startup_id}")
-async def startup_detail(request: Request, startup_id: int, db: Session = Depends(get_db)):
-    startup = db.query(models.Campaign).filter(models.Campaign.id == startup_id).first()
-    if startup is None:
-        raise HTTPException(status_code=404, detail="Startup not found")
-    return templates.TemplateResponse("startup_detail.html", {"request": request, "startup": startup})
+@app.get("/campaign/{campaign_id}")
+async def campaign_detail(request: Request, campaign_id: int, db: Session = Depends(get_db)):
+    campaign = db.query(models.Campaign).filter(models.Campaign.id == campaign_id).first()
+    if campaign is None:
+        raise HTTPException(status_code=404, detail="Campaign not found")
+    return templates.TemplateResponse("campaign_detail.html", {"request": request, "campaign": campaign})
 
 # ... (keep the rest of the routes as they are)
