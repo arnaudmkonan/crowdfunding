@@ -209,11 +209,10 @@
                         'Content-Type': 'application/x-www-form-urlencoded',
                     },
                     body: `username=${encodeURIComponent(email)}&password=${encodeURIComponent(password)}`,
+                    credentials: 'include'  // This is important to include cookies
                 });
 
                 if (response.ok) {
-                    const data = await response.json();
-                    localStorage.setItem('access_token', data.access_token);
                     console.log('Login successful');
                     window.location.href = '/dashboard';
                 } else {

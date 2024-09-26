@@ -50,8 +50,8 @@ async def create_user(user: schemas.UserCreate, background_tasks: BackgroundTask
     return db_user
 
 # Add this new route for user login
-@app.post("/token", response_model=schemas.Token)
-async def login_for_access_token(form_data: OAuth2PasswordRequestForm = Depends(), db: Session = Depends(get_db)):
+@app.post("/token")
+async def login_for_access_token(response: Response, form_data: OAuth2PasswordRequestForm = Depends(), db: Session = Depends(get_db)):
     user = auth.authenticate_user(db, form_data.username, form_data.password)
     if not user:
         raise HTTPException(
@@ -62,6 +62,15 @@ async def login_for_access_token(form_data: OAuth2PasswordRequestForm = Depends(
     access_token_expires = timedelta(minutes=auth.ACCESS_TOKEN_EXPIRE_MINUTES)
     access_token = auth.create_access_token(
         data={"sub": user.username}, expires_delta=access_token_expires
+    )
+    response.set_cookie(
+        key="access_token", 
+        value=f"Bearer {access_token}", 
+        httponly=True, 
+        max_age=1800,
+        expires=1800,
+        samesite="Lax",
+        secure=False  # set to True if using HTTPS
     )
     return {"access_token": access_token, "token_type": "bearer"}
 
@@ -263,17 +272,33 @@ async def invest_in_campaign(
 
 # ... (keep the rest of the routes as they are)
 @app.get("/dashboard")
-async def dashboard(request: Request, db: Session = Depends(get_db), current_user: schemas.User = Depends(auth.get_current_active_user)):
-    if current_user.role != schemas.UserRole.INVESTOR:
+async def dashboard(request: Request, db: Session = Depends(get_db)):
+    token = request.cookies.get("access_token")
+    if not token:
+        return RedirectResponse(url="/login")
+    
+    try:
+        payload = jwt.decode(token, SECRET_KEY, algorithms=[ALGORITHM])
+        username: str = payload.get("sub")
+        if username is None:
+            return RedirectResponse(url="/login")
+    except JWTError:
+        return RedirectResponse(url="/login")
+
+    user = db.query(models.User).filter(models.User.username == username).first()
+    if not user:
+        return RedirectResponse(url="/login")
+
+    if user.role != schemas.UserRole.INVESTOR:
         raise HTTPException(status_code=403, detail="Access denied. Investors only.")
     
-    investments = db.query(models.Investment).filter(models.Investment.investor_id == current_user.id).all()
+    investments = db.query(models.Investment).filter(models.Investment.investor_id == user.id).all()
     total_invested = sum(investment.amount for investment in investments)
     num_investments = len(investments)
     
     return templates.TemplateResponse("dashboard.html", {
         "request": request,
-        "current_user": current_user,
+        "current_user": user,
         "investments": investments,
         "total_invested": total_invested,
         "num_investments": num_investments
