@@ -217,17 +217,47 @@ async def campaign_detail(request: Request, campaign_id: int, db: Session = Depe
     campaign = db.query(models.Campaign).filter(models.Campaign.id == campaign_id).first()
     if campaign is None:
         raise HTTPException(status_code=404, detail="Campaign not found")
-    return templates.TemplateResponse("campaign_detail.html", {"request": request, "campaign": campaign})
+    
+    # Fetch the associated company
+    company = db.query(models.Company).filter(models.Company.id == campaign.company_id).first()
+    
+    # Calculate progress percentage
+    progress_percentage = (campaign.current_amount / campaign.goal_amount) * 100
+    
+    return templates.TemplateResponse("campaign_detail.html", {
+        "request": request, 
+        "campaign": campaign,
+        "company": company,
+        "progress_percentage": progress_percentage
+    })
 
 @app.post("/invest/{campaign_id}")
-async def invest_in_campaign(request: Request, campaign_id: int, investment_amount: float = Form(...), db: Session = Depends(get_db)):
+async def invest_in_campaign(
+    request: Request, 
+    campaign_id: int, 
+    investment_amount: float = Form(...), 
+    db: Session = Depends(get_db),
+    current_user: schemas.User = Depends(auth.get_current_active_user)
+):
     campaign = db.query(models.Campaign).filter(models.Campaign.id == campaign_id).first()
     if campaign is None:
         raise HTTPException(status_code=404, detail="Campaign not found")
 
+    # Create a new investment
+    new_investment = models.Investment(
+        amount=investment_amount,
+        investor_id=current_user.id,
+        campaign_id=campaign_id
+    )
+    db.add(new_investment)
+
+    # Update campaign's current amount
     campaign.current_amount += investment_amount
     db.add(campaign)
+    
     db.commit()
+    db.refresh(campaign)
+    db.refresh(new_investment)
 
     return RedirectResponse(url=f"/campaign/{campaign_id}", status_code=303)
 
