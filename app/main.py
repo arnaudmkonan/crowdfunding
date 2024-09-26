@@ -170,8 +170,8 @@ async def root(request: Request, db: Session = Depends(get_db)):
 
 @app.get("/campaigns")
 async def campaigns(request: Request, db: Session = Depends(get_db)):
-    campaigns = db.query(Campaign).all()
-    return templates.TemplateResponse("campaigns.html", {"request": request, "campaigns": campaigns})
+    projects = db.query(Campaign).all()
+    return templates.TemplateResponse("campaigns.html", {"request": request, "projects": projects})
 
 @app.get("/campaign/{campaign_id}")
 async def campaign_detail(request: Request, campaign_id: int, db: Session = Depends(get_db)):

@@ -211,7 +211,7 @@
         </section>
 
         <section class="campaigns-grid container">
-            {% for project in projects %}
+            {% for project in projects if projects %}
             <div class="campaign-card">
                 <img src="https://picsum.photos/seed/{{ project.id }}/400/200" alt="{{ project.title }}" class="campaign-image">
                 <div class="campaign-info">
