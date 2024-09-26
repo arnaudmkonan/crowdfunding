@@ -7,8 +7,7 @@ from fastapi.security import OAuth2PasswordRequestForm, OAuth2PasswordBearer
 from jose import jwt, JWTError
 from app.schemas import UserRole
 
-from app import auth, schemas
-from app import email as email_module
+from app import auth, schemas, email
 from app.auth import SECRET_KEY, ALGORITHM
 from app.routers import campaigns, users, companies, investments
 from app import models, schemas, auth
