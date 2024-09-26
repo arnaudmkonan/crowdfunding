@@ -204,4 +204,8 @@ async def how_it_works(request: Request):
 async def signup(request: Request):
     return templates.TemplateResponse("sign_up.html", {"request": request})
 
+@app.get("/login")
+async def login(request: Request):
+    return templates.TemplateResponse("login.html", {"request": request})
+
 # ... (keep the rest of the routes as they are)
