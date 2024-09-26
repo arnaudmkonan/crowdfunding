@@ -227,7 +227,7 @@ async def reset_password_request(request: Request, email: str = Form(...), backg
     user = db.query(models.User).filter(models.User.email == email).first()
     if user:
         token = auth.create_password_reset_token(email)
-        background_tasks.add_task(email_module.send_password_reset_email, email, token)
+        background_tasks.add_task(email.send_password_reset_email, email, token)
     return {"message": "If an account with that email exists, a password reset link has been sent."}
 
 @app.get("/reset-password/{token}")
