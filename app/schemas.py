@@ -8,6 +8,13 @@ class UserRole(str, Enum):
     ENTREPRENEUR = "entrepreneur"
     ADMIN = "admin"
 
+    @classmethod
+    def _missing_(cls, value):
+        for member in cls:
+            if member.value.lower() == value.lower():
+                return member
+        return None
+
 class UserBase(BaseModel):
     username: str
     email: EmailStr

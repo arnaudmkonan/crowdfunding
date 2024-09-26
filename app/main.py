@@ -5,6 +5,7 @@ from fastapi.responses import RedirectResponse
 from datetime import timedelta, datetime
 from fastapi.security import OAuth2PasswordRequestForm, OAuth2PasswordBearer
 from jose import jwt, JWTError
+from app.schemas import UserRole
 
 from app import auth, schemas, email
 from app.routers import campaigns, users, companies, investments
@@ -57,8 +58,20 @@ def add_sample_data(db: Session):
     if db.query(Campaign).count() == 0:
         logger.info("No existing campaigns found. Adding sample data...")
         # Create sample users
-        sample_user1 = User(username="sample_user", email="sample@example.com", hashed_password="hashed_password", role=schemas.UserRole.ENTREPRENEUR)
-        sample_user2 = User(username="test_user", email="test@example.com", hashed_password="hashed_password", role=schemas.UserRole.INVESTOR)
+        sample_user1 = User(
+            username="sample_user",
+            email="sample@example.com",
+            hashed_password="hashed_password",
+            role=UserRole.ENTREPRENEUR.value,  # Use .value to get the string value
+            is_verified=True
+        )
+        sample_user2 = User(
+            username="test_user",
+            email="test@example.com",
+            hashed_password="hashed_password",
+            role=UserRole.INVESTOR.value,  # Use .value to get the string value
+            is_verified=True
+        )
         db.add(sample_user1)
         db.add(sample_user2)
         db.commit()
@@ -67,8 +80,16 @@ def add_sample_data(db: Session):
         logger.info(f"Sample users created: {sample_user1.id}, {sample_user2.id}")
 
         # Create sample companies
-        sample_company1 = Company(name="EcoTech Solutions", description="Revolutionizing renewable energy", owner_id=sample_user1.id)
-        sample_company2 = Company(name="UrbanFarm", description="Transforming urban spaces into sustainable farms", owner_id=sample_user1.id)
+        sample_company1 = Company(
+            name="EcoTech Solutions",
+            description="Revolutionizing renewable energy",
+            owner_id=sample_user1.id
+        )
+        sample_company2 = Company(
+            name="UrbanFarm",
+            description="Transforming urban spaces into sustainable farms",
+            owner_id=sample_user1.id
+        )
         db.add(sample_company1)
         db.add(sample_company2)
         db.commit()
@@ -84,7 +105,9 @@ def add_sample_data(db: Session):
                 goal_amount=1000000,
                 current_amount=750000,
                 company_id=sample_company1.id,
-                end_date=datetime.datetime.utcnow() + timedelta(days=30)
+                start_date=datetime.datetime.utcnow(),
+                end_date=datetime.datetime.utcnow() + timedelta(days=30),
+                status="active"
             ),
             Campaign(
                 title="Vertical Farming Initiative",
@@ -92,17 +115,29 @@ def add_sample_data(db: Session):
                 goal_amount=500000,
                 current_amount=300000,
                 company_id=sample_company2.id,
-                end_date=datetime.datetime.utcnow() + timedelta(days=60)
+                start_date=datetime.datetime.utcnow(),
+                end_date=datetime.datetime.utcnow() + timedelta(days=60),
+                status="active"
             )
         ]
         db.add_all(sample_campaigns)
         db.commit()
+        for campaign in sample_campaigns:
+            db.refresh(campaign)
         logger.info(f"Sample campaigns created: {len(sample_campaigns)}")
 
         # Create sample investments
         sample_investments = [
-            Investment(amount=50000, investor_id=sample_user2.id, campaign_id=sample_campaigns[0].id),
-            Investment(amount=30000, investor_id=sample_user2.id, campaign_id=sample_campaigns[1].id)
+            Investment(
+                amount=50000,
+                investor_id=sample_user2.id,
+                campaign_id=sample_campaigns[0].id
+            ),
+            Investment(
+                amount=30000,
+                investor_id=sample_user2.id,
+                campaign_id=sample_campaigns[1].id
+            )
         ]
         db.add_all(sample_investments)
         db.commit()
