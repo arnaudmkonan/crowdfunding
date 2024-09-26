@@ -1,18 +1,13 @@
 from sqlalchemy import Column, Integer, String, Float, ForeignKey, DateTime
 from sqlalchemy.orm import relationship
 from app.database import Base
-import datetime
+from datetime import datetime
 
 from sqlalchemy import Boolean, Column, Integer, String, Float, ForeignKey, DateTime, Enum
 from sqlalchemy.orm import relationship
 from app.database import Base
-import datetime
-import enum
-
-class UserRole(enum.Enum):
-    INVESTOR = "investor"
-    ENTREPRENEUR = "entrepreneur"
-    ADMIN = "admin"
+from datetime import datetime
+from app.schemas import UserRole
 
 class User(Base):
     __tablename__ = "users"
@@ -23,7 +18,7 @@ class User(Base):
     hashed_password = Column(String)
     is_verified = Column(Boolean, default=False)
     role = Column(Enum(UserRole), default=UserRole.INVESTOR)
-    created_at = Column(DateTime, default=datetime.datetime.utcnow)
+    created_at = Column(DateTime, default=datetime.utcnow)
     
     # Relationships
     company = relationship("Company", back_populates="owner", uselist=False)
@@ -36,7 +31,7 @@ class Company(Base):
     name = Column(String, unique=True, index=True)
     description = Column(String)
     owner_id = Column(Integer, ForeignKey("users.id"))
-    created_at = Column(DateTime, default=datetime.datetime.utcnow)
+    created_at = Column(DateTime, default=datetime.utcnow)
 
     # Relationships
     owner = relationship("User", back_populates="company")
@@ -51,7 +46,7 @@ class Campaign(Base):
     goal_amount = Column(Float)
     current_amount = Column(Float, default=0)
     company_id = Column(Integer, ForeignKey("companies.id"))
-    start_date = Column(DateTime, default=datetime.datetime.utcnow)
+    start_date = Column(DateTime, default=datetime.utcnow)
     end_date = Column(DateTime)
     status = Column(String, default="active")  # active, completed, cancelled
 
@@ -66,7 +61,7 @@ class Investment(Base):
     amount = Column(Float)
     investor_id = Column(Integer, ForeignKey("users.id"))
     campaign_id = Column(Integer, ForeignKey("campaigns.id"))
-    created_at = Column(DateTime, default=datetime.datetime.utcnow)
+    created_at = Column(DateTime, default=datetime.utcnow)
 
     # Relationships
     investor = relationship("User", back_populates="investments")

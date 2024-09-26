@@ -62,14 +62,14 @@ def add_sample_data(db: Session):
             username="sample_user",
             email="sample@example.com",
             hashed_password="hashed_password",
-            role=UserRole.ENTREPRENEUR.value,  # Use .value to get the string value
+            role=UserRole.ENTREPRENEUR,  # Use UserRole enum directly
             is_verified=True
         )
         sample_user2 = User(
             username="test_user",
             email="test@example.com",
             hashed_password="hashed_password",
-            role=UserRole.INVESTOR.value,  # Use .value to get the string value
+            role=UserRole.INVESTOR,  # Use UserRole enum directly
             is_verified=True
         )
         db.add(sample_user1)
@@ -105,8 +105,8 @@ def add_sample_data(db: Session):
                 goal_amount=1000000,
                 current_amount=750000,
                 company_id=sample_company1.id,
-                start_date=datetime.datetime.utcnow(),
-                end_date=datetime.datetime.utcnow() + timedelta(days=30),
+                start_date=datetime.utcnow(),
+                end_date=datetime.utcnow() + timedelta(days=30),
                 status="active"
             ),
             Campaign(
@@ -115,8 +115,8 @@ def add_sample_data(db: Session):
                 goal_amount=500000,
                 current_amount=300000,
                 company_id=sample_company2.id,
-                start_date=datetime.datetime.utcnow(),
-                end_date=datetime.datetime.utcnow() + timedelta(days=60),
+                start_date=datetime.utcnow(),
+                end_date=datetime.utcnow() + timedelta(days=60),
                 status="active"
             )
         ]
