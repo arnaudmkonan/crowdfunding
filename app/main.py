@@ -244,7 +244,7 @@ async def reset_password_submit(token: str, new_password: str = Form(...), db: S
         raise HTTPException(status_code=404, detail="User not found")
     user.hashed_password = auth.get_password_hash(new_password)
     db.commit()
-    return {"message": "Password has been reset successfully"}
+    return RedirectResponse(url="/login", status_code=303)
 
 @app.get("/about")
 async def about(request: Request):
