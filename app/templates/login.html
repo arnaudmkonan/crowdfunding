@@ -209,12 +209,13 @@
                         'Content-Type': 'application/x-www-form-urlencoded',
                     },
                     body: `username=${encodeURIComponent(email)}&password=${encodeURIComponent(password)}`,
-                    credentials: 'include'  // This is important to include cookies
+                    credentials: 'include',  // This is important to include cookies
+                    redirect: 'follow'  // This allows the fetch to follow redirects
                 });
 
                 if (response.ok) {
                     console.log('Login successful');
-                    window.location.href = '/dashboard';
+                    window.location.href = response.url;  // Redirect to the URL returned by the server
                 } else {
                     const data = await response.json();
                     errorMessage.textContent = data.detail || 'Invalid email or password. Please try again.';

@@ -73,7 +73,7 @@ async def login_for_access_token(response: Response, form_data: OAuth2PasswordRe
         samesite="Lax",
         secure=False  # set to True if using HTTPS
     )
-    return {"access_token": access_token, "token_type": "bearer"}
+    return RedirectResponse(url="/dashboard", status_code=303)
 
 # Create database tables
 Base.metadata.create_all(bind=engine)
@@ -279,6 +279,7 @@ async def dashboard(request: Request, db: Session = Depends(get_db)):
         return RedirectResponse(url="/login")
     
     try:
+        token = token.split()[1] if token.startswith("Bearer ") else token
         payload = jwt.decode(token, SECRET_KEY, algorithms=[ALGORITHM])
         username: str = payload.get("sub")
         if username is None:
