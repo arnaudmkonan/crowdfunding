@@ -180,4 +180,8 @@ async def campaign_detail(request: Request, campaign_id: int, db: Session = Depe
         raise HTTPException(status_code=404, detail="Campaign not found")
     return templates.TemplateResponse("campaign_detail.html", {"request": request, "campaign": campaign})
 
+@app.get("/how-it-works")
+async def how_it_works(request: Request):
+    return templates.TemplateResponse("how_it_works.html", {"request": request})
+
 # ... (keep the rest of the routes as they are)
