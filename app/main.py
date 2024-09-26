@@ -219,4 +219,16 @@ async def campaign_detail(request: Request, campaign_id: int, db: Session = Depe
         raise HTTPException(status_code=404, detail="Campaign not found")
     return templates.TemplateResponse("campaign_detail.html", {"request": request, "campaign": campaign})
 
+@app.post("/invest/{campaign_id}")
+async def invest_in_campaign(request: Request, campaign_id: int, investment_amount: float = Form(...), db: Session = Depends(get_db)):
+    campaign = db.query(models.Campaign).filter(models.Campaign.id == campaign_id).first()
+    if campaign is None:
+        raise HTTPException(status_code=404, detail="Campaign not found")
+
+    campaign.current_amount += investment_amount
+    db.add(campaign)
+    db.commit()
+
+    return RedirectResponse(url=f"/campaign/{campaign_id}", status_code=303)
+
 # ... (keep the rest of the routes as they are)
