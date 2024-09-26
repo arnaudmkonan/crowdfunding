@@ -114,7 +114,7 @@
             <div class="container text-center">
                 <h2 class="mb-4">Featured Startups</h2>
                 <div class="row g-4">
-                    {% for project in projects[:3] %}
+                    {% for project in projects[:3] if projects %}
                     <div class="col-md-4">
                         <div class="card h-100 border-0 shadow-sm">
                             <img src="https://picsum.photos/seed/{{ project.id }}/300/200" class="card-img-top" alt="{{ project.title }}">

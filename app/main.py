@@ -165,8 +165,8 @@ app.mount("/static", StaticFiles(directory="app/static"), name="static")
 
 @app.get("/")
 async def root(request: Request, db: Session = Depends(get_db)):
-    campaigns = db.query(Campaign).all()
-    return templates.TemplateResponse("index.html", {"request": request, "campaigns": campaigns})
+    projects = db.query(Campaign).all()
+    return templates.TemplateResponse("index.html", {"request": request, "projects": projects})
 
 @app.get("/campaigns")
 async def campaigns(request: Request, db: Session = Depends(get_db)):
