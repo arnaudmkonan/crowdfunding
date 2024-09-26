@@ -34,7 +34,7 @@
                     <div class="card-body">
                         <h5 class="card-title">Campaign Progress</h5>
                         <div class="progress mb-3">
-                            <div class="progress-bar" role="progressbar" style="width: {{ progress_percentage }}%;" aria-valuenow="{{ progress_percentage }}" aria-valuemin="0" aria-valuemax="100">{{ progress_percentage|round|int }}%</div>
+                            <div class="progress-bar" role="progressbar" style="width: {{ progress_percentage|default(0)|round|int }}%;" aria-valuenow="{{ progress_percentage|default(0)|round|int }}" aria-valuemin="0" aria-valuemax="100">{{ progress_percentage|default(0)|round|int }}%</div>
                         </div>
                         <p class="card-text">
                             <strong>Raised:</strong> ${{ "{:,.2f}".format(campaign.current_amount) }}<br>
