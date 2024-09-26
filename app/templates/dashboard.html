@@ -71,7 +71,7 @@
                     <tbody>
                         {% for investment in investments %}
                         <tr>
-                            <td><a href="/startup/{{ investment.project_id }}">{{ investment.project_name }}</a></td>
+                            <td><a href="/campaign/{{ investment.project_id }}">{{ investment.project_name }}</a></td>
                             <td>${{ investment.amount }}</td>
                             <td>{{ investment.date }}</td>
                             <td>{{ investment.status }}</td>
