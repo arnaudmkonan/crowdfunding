@@ -7,8 +7,7 @@ from fastapi.security import OAuth2PasswordRequestForm, OAuth2PasswordBearer
 from jose import jwt, JWTError
 from app.schemas import UserRole
 
-from app import auth, schemas
-from app import email as email_module
+from app import auth, schemas, email_module
 from app.auth import SECRET_KEY, ALGORITHM
 from app.routers import campaigns, users, companies, investments
 from app import models, schemas, auth
@@ -45,8 +44,8 @@ async def create_user(user: schemas.UserCreate, background_tasks: BackgroundTask
     logger.info(f"User created successfully with id: {db_user.id}")
     
     # Generate and send verification email
-    token = email.create_email_verification_token(user.email)
-    background_tasks.add_task(email.send_email_verification, user.email, token)
+    token = email_module.create_email_verification_token(user.email)
+    background_tasks.add_task(email_module.send_email_verification, user.email, token)
     logger.info(f"Verification email task added for user: {user.email}")
     
     return db_user
