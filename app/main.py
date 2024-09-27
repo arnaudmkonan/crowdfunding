@@ -92,7 +92,11 @@ async def login_for_access_token(response: Response, form_data: OAuth2PasswordRe
         samesite="Lax",
         secure=False  # set to True if using HTTPS
     )
-    return {"access_token": access_token, "token_type": "bearer"}
+    return RedirectResponse(url="/dashboard", status_code=303)
+
+@app.post("/login", response_class=HTMLResponse)
+async def login(request: Request, form_data: OAuth2PasswordRequestForm = Depends(), db: Session = Depends(get_db)):
+    return await login_for_access_token(request, form_data, db)
 
 # Create database tables
 Base.metadata.create_all(bind=engine)
