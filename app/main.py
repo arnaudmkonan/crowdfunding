@@ -92,7 +92,7 @@ async def login_for_access_token(response: Response, form_data: OAuth2PasswordRe
         samesite="Lax",
         secure=False  # set to True if using HTTPS
     )
-    return RedirectResponse(url="/dashboard", status_code=303)
+    return {"access_token": access_token, "token_type": "bearer"}
 
 # Create database tables
 Base.metadata.create_all(bind=engine)
@@ -320,34 +320,17 @@ async def invest_in_campaign(
 
 # ... (keep the rest of the routes as they are)
 @app.get("/dashboard")
-async def dashboard(request: Request, db: Session = Depends(get_db)):
-    token = request.cookies.get("access_token")
-    if not token:
-        return RedirectResponse(url="/login")
-    
-    try:
-        token = token.split()[1] if token.startswith("Bearer ") else token
-        payload = jwt.decode(token, SECRET_KEY, algorithms=[ALGORITHM])
-        username: str = payload.get("sub")
-        if username is None:
-            return RedirectResponse(url="/login")
-    except JWTError:
-        return RedirectResponse(url="/login")
-
-    user = db.query(models.User).filter(models.User.username == username).first()
-    if not user:
-        return RedirectResponse(url="/login")
-
-    if user.role != schemas.UserRole.INVESTOR:
+async def dashboard(request: Request, db: Session = Depends(get_db), current_user: schemas.User = Depends(auth.get_current_active_user)):
+    if current_user.role != schemas.UserRole.INVESTOR:
         raise HTTPException(status_code=403, detail="Access denied. Investors only.")
     
-    investments = db.query(models.Investment).filter(models.Investment.investor_id == user.id).all()
+    investments = db.query(models.Investment).filter(models.Investment.investor_id == current_user.id).all()
     total_invested = sum(investment.amount for investment in investments)
     num_investments = len(investments)
     
     return templates.TemplateResponse("dashboard.html", {
         "request": request,
-        "current_user": user,
+        "current_user": current_user,
         "investments": investments,
         "total_invested": total_invested,
         "num_investments": num_investments

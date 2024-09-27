@@ -217,8 +217,11 @@
                 });
 
                 if (response.ok) {
+                    const data = await response.json();
                     console.log('Login successful');
-                    window.location.href = response.url;  // Redirect to the URL returned by the server
+                    // Store the token in localStorage
+                    localStorage.setItem('access_token', data.access_token);
+                    window.location.href = '/dashboard';  // Redirect to the dashboard
                 } else {
                     const data = await response.json();
                     errorMessage.textContent = data.detail || 'Invalid email or password. Please try again.';
