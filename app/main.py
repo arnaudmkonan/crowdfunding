@@ -217,35 +217,48 @@ app.mount("/static", StaticFiles(directory="app/static"), name="static")
 @app.get("/")
 async def root(request: Request, db: Session = Depends(get_db)):
     projects = db.query(Campaign).all()
-    return templates.TemplateResponse("index.html", {"request": request, "projects": projects})
+    current_user = await get_current_user_or_none(request, db)
+    return templates.TemplateResponse("index.html", {"request": request, "projects": projects, "current_user": current_user})
 
 @app.get("/campaigns")
 async def campaigns(request: Request, db: Session = Depends(get_db)):
     projects = db.query(Campaign).all()
-    return templates.TemplateResponse("campaigns.html", {"request": request, "projects": projects})
+    current_user = await get_current_user_or_none(request, db)
+    return templates.TemplateResponse("campaigns.html", {"request": request, "projects": projects, "current_user": current_user})
 
 @app.get("/campaign/{campaign_id}")
 async def campaign_detail(request: Request, campaign_id: int, db: Session = Depends(get_db)):
     campaign = db.query(Campaign).filter(Campaign.id == campaign_id).first()
     if not campaign:
         raise HTTPException(status_code=404, detail="Campaign not found")
-    return templates.TemplateResponse("campaign_detail.html", {"request": request, "campaign": campaign})
+    current_user = await get_current_user_or_none(request, db)
+    return templates.TemplateResponse("campaign_detail.html", {"request": request, "campaign": campaign, "current_user": current_user})
 
 @app.get("/how-it-works")
-async def how_it_works(request: Request):
-    return templates.TemplateResponse("how_it_works.html", {"request": request})
+async def how_it_works(request: Request, db: Session = Depends(get_db)):
+    current_user = await get_current_user_or_none(request, db)
+    return templates.TemplateResponse("how_it_works.html", {"request": request, "current_user": current_user})
 
 @app.get("/signup")
-async def signup(request: Request):
-    return templates.TemplateResponse("sign_up.html", {"request": request})
+async def signup(request: Request, db: Session = Depends(get_db)):
+    current_user = await get_current_user_or_none(request, db)
+    return templates.TemplateResponse("sign_up.html", {"request": request, "current_user": current_user})
 
 @app.get("/login")
-async def login(request: Request):
-    return templates.TemplateResponse("login.html", {"request": request})
+async def login(request: Request, db: Session = Depends(get_db)):
+    current_user = await get_current_user_or_none(request, db)
+    return templates.TemplateResponse("login.html", {"request": request, "current_user": current_user})
 
 @app.get("/reset-password")
-async def reset_password(request: Request):
-    return templates.TemplateResponse("reset_password.html", {"request": request})
+async def reset_password(request: Request, db: Session = Depends(get_db)):
+    current_user = await get_current_user_or_none(request, db)
+    return templates.TemplateResponse("reset_password.html", {"request": request, "current_user": current_user})
+
+async def get_current_user_or_none(request: Request, db: Session):
+    try:
+        return await auth.get_current_user(request, db)
+    except HTTPException:
+        return None
 
 @app.post("/reset-password")
 async def reset_password_request(request: Request, background_tasks: BackgroundTasks = BackgroundTasks(), db: Session = Depends(get_db)):
@@ -296,6 +309,25 @@ async def campaign_detail(request: Request, campaign_id: int, db: Session = Depe
         "company": company,
         "progress_percentage": progress_percentage
     })
+
+@app.post("/api/kyc")
+async def update_kyc(
+    request: Request,
+    full_name: str = Form(...),
+    date_of_birth: str = Form(...),
+    address: str = Form(...),
+    id_number: str = Form(...),
+    db: Session = Depends(get_db),
+    current_user: schemas.User = Depends(auth.get_current_active_user)
+):
+    # Update user's KYC information
+    current_user.full_name = full_name
+    current_user.date_of_birth = date_of_birth
+    current_user.address = address
+    current_user.id_number = id_number
+    current_user.kyc_verified = True
+    db.commit()
+    return {"message": "KYC information updated successfully"}
 
 @app.post("/invest/{campaign_id}")
 async def invest_in_campaign(

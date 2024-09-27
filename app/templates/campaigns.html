@@ -191,8 +191,13 @@
                     <a href="/campaigns">Campaigns</a>
                     <a href="/how-it-works">How It Works</a>
                     <a href="/about">About</a>
-                    <a href="/login">Login</a>
-                    <a href="/signup">Sign Up</a>
+                    {% if current_user %}
+                        <a href="/dashboard">Dashboard</a>
+                        <a href="/logout">Logout</a>
+                    {% else %}
+                        <a href="/login">Login</a>
+                        <a href="/signup">Sign Up</a>
+                    {% endif %}
                 </div>
             </nav>
         </div>

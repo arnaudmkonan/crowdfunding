@@ -20,6 +20,13 @@ class User(Base):
     role = Column(Enum(UserRole), default=UserRole.INVESTOR)
     created_at = Column(DateTime, default=datetime.utcnow)
     
+    # KYC information
+    full_name = Column(String)
+    date_of_birth = Column(String)
+    address = Column(String)
+    id_number = Column(String)
+    kyc_verified = Column(Boolean, default=False)
+    
     # Relationships
     company = relationship("Company", back_populates="owner", uselist=False)
     investments = relationship("Investment", back_populates="investor")

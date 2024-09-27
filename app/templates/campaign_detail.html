@@ -18,7 +18,14 @@
                 <h1>{{ campaign.title }}</h1>
                 <div>
                     <a href="/" class="btn btn-light me-2">Home</a>
-                    <a href="/campaigns" class="btn btn-light">All Campaigns</a>
+                    <a href="/campaigns" class="btn btn-light me-2">All Campaigns</a>
+                    {% if current_user %}
+                        <a href="/dashboard" class="btn btn-light me-2">Dashboard</a>
+                        <a href="/logout" class="btn btn-light">Logout</a>
+                    {% else %}
+                        <a href="/login" class="btn btn-light me-2">Login</a>
+                        <a href="/signup" class="btn btn-light">Sign Up</a>
+                    {% endif %}
                 </div>
             </nav>
         </div>
