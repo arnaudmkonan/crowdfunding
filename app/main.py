@@ -71,7 +71,7 @@ async def create_user(user: schemas.UserCreate, background_tasks: BackgroundTask
 
 # Add this new route for user login
 @app.post("/token")
-async def login_for_access_token(response: Response, form_data: OAuth2PasswordRequestForm = Depends(), db: Session = Depends(get_db)):
+async def login_for_access_token(form_data: OAuth2PasswordRequestForm = Depends(), db: Session = Depends(get_db)):
     user = auth.authenticate_user(db, form_data.username, form_data.password)
     if not user:
         raise HTTPException(
@@ -83,6 +83,7 @@ async def login_for_access_token(response: Response, form_data: OAuth2PasswordRe
     access_token = auth.create_access_token(
         data={"sub": user.username}, expires_delta=access_token_expires
     )
+    response = RedirectResponse(url="/dashboard", status_code=303)
     response.set_cookie(
         key="access_token", 
         value=f"Bearer {access_token}", 
@@ -92,11 +93,11 @@ async def login_for_access_token(response: Response, form_data: OAuth2PasswordRe
         samesite="Lax",
         secure=False  # set to True if using HTTPS
     )
-    return RedirectResponse(url="/dashboard", status_code=303)
+    return response
 
 @app.post("/login", response_class=HTMLResponse)
-async def login(request: Request, form_data: OAuth2PasswordRequestForm = Depends(), db: Session = Depends(get_db)):
-    return await login_for_access_token(request, form_data, db)
+async def login(form_data: OAuth2PasswordRequestForm = Depends(), db: Session = Depends(get_db)):
+    return await login_for_access_token(form_data, db)
 
 # Create database tables
 Base.metadata.create_all(bind=engine)
