@@ -59,7 +59,7 @@ def create_email_verification_token(email: str) -> str:
         raise HTTPException(status_code=500, detail="Could not create verification token")
 
 async def send_email_verification(email: EmailStr, token: str):
-    verification_url = f"{BASE_URL}/verify-email?token={token}"
+    verification_url = f"{BASE_URL}/api/users/verify-email?token={token}"
     
     html = f"""
     <p>Please click the link below to verify your email address:</p>

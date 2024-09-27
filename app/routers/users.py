@@ -19,7 +19,7 @@ async def create_user(user: schemas.UserCreate, db: Session = Depends(get_db)):
     print(f"User created: {db_user.id}, {db_user.username}, {db_user.email}")  # Add this line for debugging
     return db_user
 
-@router.get("/verify-email")
+@router.get("/api/users/verify-email")
 async def verify_email(token: str, db: Session = Depends(get_db)):
     try:
         payload = email.verify_email_token(token)
