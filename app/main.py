@@ -83,10 +83,15 @@ async def login_for_access_token(form_data: OAuth2PasswordRequestForm = Depends(
     access_token = auth.create_access_token(
         data={"sub": user.username}, expires_delta=access_token_expires
     )
+    return {"access_token": access_token, "token_type": "bearer"}
+
+@app.post("/login", response_class=HTMLResponse)
+async def login(form_data: OAuth2PasswordRequestForm = Depends(), db: Session = Depends(get_db)):
+    token_data = await login_for_access_token(form_data, db)
     response = RedirectResponse(url="/dashboard", status_code=303)
     response.set_cookie(
         key="access_token", 
-        value=f"Bearer {access_token}", 
+        value=f"Bearer {token_data['access_token']}", 
         httponly=True, 
         max_age=1800,
         expires=1800,
@@ -94,10 +99,6 @@ async def login_for_access_token(form_data: OAuth2PasswordRequestForm = Depends(
         secure=False  # set to True if using HTTPS
     )
     return response
-
-@app.post("/login", response_class=HTMLResponse)
-async def login(form_data: OAuth2PasswordRequestForm = Depends(), db: Session = Depends(get_db)):
-    return await login_for_access_token(form_data, db)
 
 # Create database tables
 Base.metadata.create_all(bind=engine)
@@ -328,7 +329,10 @@ async def invest_in_campaign(
 
 # ... (keep the rest of the routes as they are)
 @app.get("/dashboard")
-async def dashboard(request: Request, db: Session = Depends(get_db), current_user: schemas.User = Depends(auth.get_current_active_user)):
+async def dashboard(request: Request, db: Session = Depends(get_db)):
+    current_user = await auth.get_current_user(request, db)
+    if not current_user:
+        return RedirectResponse(url="/login", status_code=303)
     if current_user.role != schemas.UserRole.INVESTOR:
         raise HTTPException(status_code=403, detail="Access denied. Investors only.")
     
