@@ -246,11 +246,14 @@ async def reset_password(request: Request):
     return templates.TemplateResponse("reset_password.html", {"request": request})
 
 @app.post("/reset-password")
-async def reset_password_request(request: Request, email_address: str = Form(...), background_tasks: BackgroundTasks = BackgroundTasks(), db: Session = Depends(get_db)):
-    user = db.query(models.User).filter(models.User.email == email_address).first()
-    if user:
-        token = auth.create_password_reset_token(email_address)
-        background_tasks.add_task(email_module.send_password_reset_email, email_address, token)
+async def reset_password_request(request: Request, background_tasks: BackgroundTasks = BackgroundTasks(), db: Session = Depends(get_db)):
+    form_data = await request.form()
+    email_address = form_data.get("email")
+    if email_address:
+        user = db.query(models.User).filter(models.User.email == email_address).first()
+        if user:
+            token = auth.create_password_reset_token(email_address)
+            background_tasks.add_task(email_module.send_password_reset_email, email_address, token)
     return {"message": "If an account with that email exists, a password reset link has been sent."}
 
 @app.get("/reset-password/{token}")
