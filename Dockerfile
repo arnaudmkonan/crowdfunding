@@ -14,6 +14,9 @@ RUN mkdir -p /app/app/templates /app/app/static
 COPY app/templates /app/app/templates
 COPY app/static /app/app/static
 
+# Create logs directory and set permissions
+RUN mkdir -p /app/logs && chmod 777 /app/logs
+
 ENV PATH="/root/.local/bin:${PATH}"
 
 CMD ["uvicorn", "app.main:app", "--host", "0.0.0.0", "--port", "8000", "--reload"]

@@ -14,10 +14,29 @@ from app import models, schemas, auth
 from app.database import engine
 
 import logging
+from logging.handlers import RotatingFileHandler
+import os
 
+# Create logs directory if it doesn't exist
+if not os.path.exists('logs'):
+    os.makedirs('logs')
+
+# Configure logging
 logging.basicConfig(level=logging.INFO)
 logger = logging.getLogger(__name__)
 
+# Add a rotating file handler
+file_handler = RotatingFileHandler('logs/app.log', maxBytes=10240, backupCount=10)
+file_handler.setFormatter(logging.Formatter('%(asctime)s %(levelname)s: %(message)s [in %(pathname)s:%(lineno)d]'))
+file_handler.setLevel(logging.INFO)
+logger.addHandler(file_handler)
+
+# Add a stream handler for console output
+stream_handler = logging.StreamHandler()
+stream_handler.setLevel(logging.INFO)
+logger.addHandler(stream_handler)
+
+logger.info("Application starting...")
 logger.info("Creating database tables...")
 models.Base.metadata.create_all(bind=engine)
 logger.info("Database tables created successfully")
