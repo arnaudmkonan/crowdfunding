@@ -1,0 +1,288 @@
+<html><head><base href="https://crowdfund-innovate.com/signup">
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Sign Up - CrowdFund Innovate</title>
+<style>
+  :root {
+    --primary-color: #1e88e5;
+    --secondary-color: #ff9800;
+    --text-color: #333;
+    --bg-color: #f5f5f5;
+    --error-color: #f44336;
+    --success-color: #4caf50;
+  }
+  
+  body {
+    font-family: 'Roboto', sans-serif;
+    margin: 0;
+    padding: 0;
+    background-color: var(--bg-color);
+    color: var(--text-color);
+  }
+  
+  .container {
+    max-width: 1200px;
+    margin: 0 auto;
+    padding: 0 20px;
+  }
+  
+  header {
+    background-color: #fff;
+    box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+    position: fixed;
+    width: 100%;
+    top: 0;
+    z-index: 1000;
+  }
+  
+  nav {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 1rem 0;
+  }
+  
+  .logo {
+    font-size: 1.5rem;
+    font-weight: bold;
+    color: var(--primary-color);
+  }
+  
+  .nav-links {
+    display: flex;
+    gap: 1rem;
+  }
+  
+  .nav-links a {
+    text-decoration: none;
+    color: var(--text-color);
+    font-weight: 500;
+  }
+  
+  main {
+    padding-top: 80px;
+    min-height: calc(100vh - 160px);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+  }
+  
+  .signup-container {
+    background-color: #fff;
+    border-radius: 10px;
+    box-shadow: 0 4px 6px rgba(0,0,0,0.1);
+    padding: 2rem;
+    width: 100%;
+    max-width: 400px;
+  }
+  
+  h1 {
+    text-align: center;
+    color: var(--primary-color);
+    margin-bottom: 1.5rem;
+  }
+  
+  form {
+    display: flex;
+    flex-direction: column;
+    gap: 1rem;
+  }
+  
+  .form-group {
+    display: flex;
+    flex-direction: column;
+  }
+  
+  label {
+    font-weight: 500;
+    margin-bottom: 0.25rem;
+  }
+  
+  input {
+    padding: 0.5rem;
+    border: 1px solid #ccc;
+    border-radius: 4px;
+    font-size: 1rem;
+  }
+  
+  button {
+    background-color: var(--primary-color);
+    color: #fff;
+    border: none;
+    padding: 0.75rem;
+    border-radius: 4px;
+    font-size: 1rem;
+    cursor: pointer;
+    transition: background-color 0.3s ease;
+  }
+  
+  button:hover {
+    background-color: #1565c0;
+  }
+  
+  .error-message {
+    color: var(--error-color);
+    font-size: 0.875rem;
+    margin-top: 0.25rem;
+  }
+  
+  .success-message {
+    color: var(--success-color);
+    font-size: 0.875rem;
+    margin-top: 0.25rem;
+  }
+  
+  .login-link {
+    text-align: center;
+    margin-top: 1rem;
+  }
+  
+  .login-link a {
+    color: var(--primary-color);
+    text-decoration: none;
+  }
+  
+  footer {
+    background-color: #333;
+    color: #fff;
+    text-align: center;
+    padding: 1rem 0;
+  }
+</style>
+</head>
+<body>
+  <header>
+    <div class="container">
+      <nav>
+        <div class="logo">CrowdFund Innovate</div>
+        <div class="nav-links">
+          <a href="https://crowdfund-innovate.com/startups">Startups</a>
+          <a href="https://crowdfund-innovate.com/how-it-works">How It Works</a>
+          <a href="https://crowdfund-innovate.com/about">About</a>
+          <a href="https://crowdfund-innovate.com/login">Login</a>
+          <a href="https://crowdfund-innovate.com/signup">Sign Up</a>
+        </div>
+      </nav>
+    </div>
+  </header>
+
+  <main>
+    <div class="signup-container">
+      <h1>Create an Account</h1>
+      <form id="signup-form">
+        <div class="form-group">
+          <label for="full-name">Full Name</label>
+          <input type="text" id="full-name" name="full-name" required>
+        </div>
+        <div class="form-group">
+          <label for="email">Email Address</label>
+          <input type="email" id="email" name="email" required>
+        </div>
+        <div class="form-group">
+          <label for="password">Password</label>
+          <input type="password" id="password" name="password" required>
+        </div>
+        <div class="form-group">
+          <label for="confirm-password">Confirm Password</label>
+          <input type="password" id="confirm-password" name="confirm-password" required>
+        </div>
+        <button type="submit">Sign Up</button>
+      </form>
+      <div id="error-message" class="error-message"></div>
+      <div id="success-message" class="success-message"></div>
+      <div class="login-link">
+        Already have an account? <a href="https://crowdfund-innovate.com/login">Log in</a>
+      </div>
+    </div>
+  </main>
+
+  <footer>
+    <div class="container">
+      <p>&copy; 2023 CrowdFund Innovate. All rights reserved.</p>
+    </div>
+  </footer>
+
+  <script>
+    const form = document.getElementById('signup-form');
+    const errorMessage = document.getElementById('error-message');
+    const successMessage = document.getElementById('success-message');
+
+    form.addEventListener('submit', async (e) => {
+      e.preventDefault();
+      
+      const fullName = document.getElementById('full-name').value;
+      const email = document.getElementById('email').value;
+      const password = document.getElementById('password').value;
+      const confirmPassword = document.getElementById('confirm-password').value;
+
+      // Clear previous messages
+      errorMessage.textContent = '';
+      successMessage.textContent = '';
+
+      // Basic form validation
+      if (password !== confirmPassword) {
+        errorMessage.textContent = 'Passwords do not match.';
+        return;
+      }
+
+      if (password.length < 8) {
+        errorMessage.textContent = 'Password must be at least 8 characters long.';
+        return;
+      }
+
+      // Simulate API call for user registration
+      try {
+        // In a real application, this would be an API call to your backend
+        await new Promise(resolve => setTimeout(resolve, 1000)); // Simulating network delay
+
+        // Simulating a successful registration
+        successMessage.textContent = 'Account created successfully! Redirecting to login...';
+        
+        // Clear form fields
+        form.reset();
+
+        // Redirect to login page after a short delay
+        setTimeout(() => {
+          window.location.href = 'https://crowdfund-innovate.com/login';
+        }, 2000);
+
+      } catch (error) {
+        errorMessage.textContent = 'An error occurred. Please try again.';
+      }
+    });
+
+    // Password strength indicator
+    const passwordInput = document.getElementById('password');
+    const strengthIndicator = document.createElement('div');
+    strengthIndicator.className = 'strength-indicator';
+    passwordInput.parentNode.insertBefore(strengthIndicator, passwordInput.nextSibling);
+
+    passwordInput.addEventListener('input', () => {
+      const strength = calculatePasswordStrength(passwordInput.value);
+      updateStrengthIndicator(strength);
+    });
+
+    function calculatePasswordStrength(password) {
+      let strength = 0;
+      if (password.length >= 8) strength++;
+      if (password.match(/[a-z]/) && password.match(/[A-Z]/)) strength++;
+      if (password.match(/\d/)) strength++;
+      if (password.match(/[^a-zA-Z\d]/)) strength++;
+      return strength;
+    }
+
+    function updateStrengthIndicator(strength) {
+      const colors = ['#f44336', '#ff9800', '#ffc107', '#4caf50'];
+      const labels = ['Weak', 'Fair', 'Good', 'Strong'];
+      
+      strengthIndicator.style.backgroundColor = colors[strength];
+      strengthIndicator.textContent = labels[strength];
+      strengthIndicator.style.color = '#fff';
+      strengthIndicator.style.padding = '0.25rem';
+      strengthIndicator.style.borderRadius = '4px';
+      strengthIndicator.style.marginTop = '0.25rem';
+      strengthIndicator.style.fontSize = '0.875rem';
+    }
+  </script>
+</body>
+</html>

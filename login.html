@@ -1,0 +1,228 @@
+<html><head><base href="https://crowdfund-innovate.com/login">
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Login - CrowdFund Innovate</title>
+<style>
+  :root {
+    --primary-color: #1e88e5;
+    --secondary-color: #ff9800;
+    --text-color: #333;
+    --bg-color: #f5f5f5;
+    --card-bg-color: #ffffff;
+  }
+  
+  body {
+    font-family: 'Roboto', sans-serif;
+    margin: 0;
+    padding: 0;
+    background-color: var(--bg-color);
+    color: var(--text-color);
+    line-height: 1.6;
+  }
+  
+  .container {
+    max-width: 1200px;
+    margin: 0 auto;
+    padding: 0 20px;
+  }
+  
+  header {
+    background-color: #fff;
+    box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+    position: fixed;
+    width: 100%;
+    top: 0;
+    z-index: 1000;
+  }
+  
+  nav {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 1rem 0;
+  }
+  
+  .logo {
+    font-size: 1.5rem;
+    font-weight: bold;
+    color: var(--primary-color);
+  }
+  
+  .nav-links {
+    display: flex;
+    gap: 1rem;
+  }
+  
+  .nav-links a {
+    text-decoration: none;
+    color: var(--text-color);
+    font-weight: 500;
+  }
+  
+  main {
+    padding-top: 80px;
+    min-height: calc(100vh - 160px);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+  }
+  
+  .login-container {
+    background-color: var(--card-bg-color);
+    border-radius: 8px;
+    box-shadow: 0 4px 6px rgba(0,0,0,0.1);
+    padding: 2rem;
+    width: 100%;
+    max-width: 400px;
+  }
+  
+  h1 {
+    color: var(--primary-color);
+    text-align: center;
+    margin-bottom: 1.5rem;
+  }
+  
+  form {
+    display: flex;
+    flex-direction: column;
+  }
+  
+  .form-group {
+    margin-bottom: 1rem;
+  }
+  
+  label {
+    display: block;
+    margin-bottom: 0.5rem;
+    font-weight: 500;
+  }
+  
+  input[type="email"],
+  input[type="password"] {
+    width: 100%;
+    padding: 0.5rem;
+    border: 1px solid #ccc;
+    border-radius: 4px;
+    font-size: 1rem;
+  }
+  
+  button {
+    background-color: var(--primary-color);
+    color: white;
+    border: none;
+    border-radius: 4px;
+    padding: 0.75rem;
+    font-size: 1rem;
+    cursor: pointer;
+    transition: background-color 0.3s ease;
+  }
+  
+  button:hover {
+    background-color: #1565c0;
+  }
+  
+  .forgot-password {
+    text-align: right;
+    margin-top: 0.5rem;
+  }
+  
+  .forgot-password a {
+    color: var(--primary-color);
+    text-decoration: none;
+  }
+  
+  .signup-link {
+    text-align: center;
+    margin-top: 1rem;
+  }
+  
+  .signup-link a {
+    color: var(--primary-color);
+    text-decoration: none;
+    font-weight: 500;
+  }
+  
+  footer {
+    background-color: #333;
+    color: #fff;
+    text-align: center;
+    padding: 1rem 0;
+  }
+</style>
+</head>
+<body>
+  <header>
+    <div class="container">
+      <nav>
+        <div class="logo">CrowdFund Innovate</div>
+        <div class="nav-links">
+          <a href="/startups">Startups</a>
+          <a href="/how-it-works">How It Works</a>
+          <a href="/about">About</a>
+          <a href="/login">Login</a>
+          <a href="/signup">Sign Up</a>
+        </div>
+      </nav>
+    </div>
+  </header>
+
+  <main>
+    <div class="login-container">
+      <h1>Login</h1>
+      <form id="login-form">
+        <div class="form-group">
+          <label for="email">Email</label>
+          <input type="email" id="email" name="email" required>
+        </div>
+        <div class="form-group">
+          <label for="password">Password</label>
+          <input type="password" id="password" name="password" required>
+        </div>
+        <button type="submit">Log In</button>
+        <div class="forgot-password">
+          <a href="/forgot-password">Forgot password?</a>
+        </div>
+      </form>
+      <div class="signup-link">
+        Don't have an account? <a href="/signup">Sign up</a>
+      </div>
+    </div>
+  </main>
+
+  <footer>
+    <div class="container">
+      <p>&copy; 2023 CrowdFund Innovate. All rights reserved.</p>
+    </div>
+  </footer>
+
+  <script>
+    document.getElementById('login-form').addEventListener('submit', function(e) {
+      e.preventDefault();
+      
+      const email = document.getElementById('email').value;
+      const password = document.getElementById('password').value;
+      
+      // Here you would typically send a request to your server to authenticate the user
+      // For this example, we'll just log the values and show an alert
+      console.log('Login attempt:', { email, password });
+      
+      // Simulate a login process
+      setTimeout(() => {
+        alert('Login successful! Redirecting to dashboard...');
+        // In a real application, you would redirect to the user's dashboard or home page
+        // window.location.href = '/dashboard';
+      }, 1000);
+    });
+
+    // Add some simple animations
+    document.querySelector('.login-container').style.opacity = '0';
+    document.querySelector('.login-container').style.transform = 'translateY(20px)';
+    
+    window.addEventListener('load', function() {
+      document.querySelector('.login-container').style.transition = 'opacity 0.5s ease, transform 0.5s ease';
+      document.querySelector('.login-container').style.opacity = '1';
+      document.querySelector('.login-container').style.transform = 'translateY(0)';
+    });
+  </script>
+</body>
+</html>

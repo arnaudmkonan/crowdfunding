@@ -1,0 +1,291 @@
+<html><head><base href="https://crowdfund-innovate.com/about">
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>About CrowdFund Innovate</title>
+<style>
+  :root {
+    --primary-color: #1e88e5;
+    --secondary-color: #ff9800;
+    --text-color: #333;
+    --bg-color: #f5f5f5;
+    --card-bg-color: #ffffff;
+  }
+  
+  body {
+    font-family: 'Roboto', sans-serif;
+    margin: 0;
+    padding: 0;
+    background-color: var(--bg-color);
+    color: var(--text-color);
+    line-height: 1.6;
+  }
+  
+  .container {
+    max-width: 1200px;
+    margin: 0 auto;
+    padding: 0 20px;
+  }
+  
+  header {
+    background-color: #fff;
+    box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+    position: fixed;
+    width: 100%;
+    top: 0;
+    z-index: 1000;
+  }
+  
+  nav {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 1rem 0;
+  }
+  
+  .logo {
+    font-size: 1.5rem;
+    font-weight: bold;
+    color: var(--primary-color);
+  }
+  
+  .nav-links {
+    display: flex;
+    gap: 1rem;
+  }
+  
+  .nav-links a {
+    text-decoration: none;
+    color: var(--text-color);
+    font-weight: 500;
+  }
+  
+  main {
+    padding-top: 80px;
+    min-height: calc(100vh - 160px);
+  }
+  
+  h1, h2 {
+    color: var(--primary-color);
+  }
+  
+  .hero {
+    background-color: var(--primary-color);
+    color: white;
+    text-align: center;
+    padding: 4rem 0;
+    margin-bottom: 3rem;
+  }
+  
+  .hero h1 {
+    color: white;
+    font-size: 2.5rem;
+    margin-bottom: 1rem;
+  }
+  
+  .hero p {
+    font-size: 1.2rem;
+    max-width: 800px;
+    margin: 0 auto;
+  }
+  
+  .about-section {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 2rem;
+    margin-bottom: 3rem;
+  }
+  
+  .about-content {
+    flex: 1;
+    min-width: 300px;
+  }
+  
+  .about-image {
+    flex: 1;
+    min-width: 300px;
+    position: relative;
+    overflow: hidden;
+    border-radius: 10px;
+  }
+  
+  .about-image img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    transition: transform 0.3s ease;
+  }
+  
+  .about-image:hover img {
+    transform: scale(1.05);
+  }
+  
+  .team-section {
+    margin-bottom: 3rem;
+  }
+  
+  .team-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+    gap: 2rem;
+  }
+  
+  .team-member {
+    background-color: var(--card-bg-color);
+    border-radius: 10px;
+    overflow: hidden;
+    box-shadow: 0 4px 6px rgba(0,0,0,0.1);
+    transition: transform 0.3s ease;
+  }
+  
+  .team-member:hover {
+    transform: translateY(-5px);
+  }
+  
+  .team-member img {
+    width: 100%;
+    height: 250px;
+    object-fit: cover;
+  }
+  
+  .team-member-info {
+    padding: 1rem;
+  }
+  
+  .team-member-info h3 {
+    margin: 0;
+    color: var(--primary-color);
+  }
+  
+  .team-member-info p {
+    margin: 0.5rem 0 0;
+    font-style: italic;
+  }
+  
+  footer {
+    background-color: #333;
+    color: #fff;
+    text-align: center;
+    padding: 1rem 0;
+  }
+</style>
+</head>
+<body>
+  <header>
+    <div class="container">
+      <nav>
+        <div class="logo">CrowdFund Innovate</div>
+        <div class="nav-links">
+          <a href="/startups">Startups</a>
+          <a href="/how-it-works">How It Works</a>
+          <a href="/about">About</a>
+          <a href="/login">Login</a>
+          <a href="/signup">Sign Up</a>
+        </div>
+      </nav>
+    </div>
+  </header>
+
+  <main>
+    <div class="hero">
+      <div class="container">
+        <h1>About CrowdFund Innovate</h1>
+        <p>Empowering innovators and investors to shape the future together</p>
+      </div>
+    </div>
+
+    <div class="container">
+      <section class="about-section">
+        <div class="about-content">
+          <h2>Our Mission</h2>
+          <p>At CrowdFund Innovate, we believe that great ideas have the power to change the world. Our mission is to bridge the gap between visionary entrepreneurs and forward-thinking investors, creating a platform where innovation thrives and dreams become reality.</p>
+          <p>We're committed to democratizing investment opportunities, allowing individuals to participate in the growth of exciting startups while providing entrepreneurs with the capital and support they need to succeed.</p>
+        </div>
+        <div class="about-image">
+          <img src="https://images.unsplash.com/photo-1522202176988-66273c2fd55f?ixlib=rb-4.0.3&ixid=MnwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8&auto=format&fit=crop&w=1170&q=80" alt="Team collaborating on a project, modern office setting" width="600" height="400">
+        </div>
+      </section>
+
+      <section class="about-section">
+        <div class="about-image">
+          <img src="https://images.unsplash.com/photo-1551434678-e076c223a692?ixlib=rb-4.0.3&ixid=MnwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8&auto=format&fit=crop&w=1170&q=80" alt="Diverse group of professionals in a meeting, discussing ideas" width="600" height="400">
+        </div>
+        <div class="about-content">
+          <h2>Our Vision</h2>
+          <p>We envision a world where innovative ideas are not limited by traditional funding constraints. By harnessing the power of crowdfunding and our community of investors, we aim to fuel the next generation of groundbreaking startups and technologies.</p>
+          <p>Our platform is designed to foster transparency, trust, and collaboration between entrepreneurs and investors, creating a vibrant ecosystem where both can thrive and contribute to shaping the future.</p>
+        </div>
+      </section>
+
+      <section class="team-section">
+        <h2>Meet Our Team</h2>
+        <div class="team-grid">
+          <div class="team-member">
+            <img src="https://images.unsplash.com/photo-1573497019940-1c28c88b4f3e?ixlib=rb-4.0.3&ixid=MnwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8&auto=format&fit=crop&w=687&q=80" alt="Sarah Johnson, CEO and Co-founder" width="250" height="250">
+            <div class="team-member-info">
+              <h3>Sarah Johnson</h3>
+              <p>CEO and Co-founder</p>
+            </div>
+          </div>
+          <div class="team-member">
+            <img src="https://images.unsplash.com/photo-1560250097-0b93528c311a?ixlib=rb-4.0.3&ixid=MnwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8&auto=format&fit=crop&w=687&q=80" alt="Michael Chang, CTO and Co-founder" width="250" height="250">
+            <div class="team-member-info">
+              <h3>Michael Chang</h3>
+              <p>CTO and Co-founder</p>
+            </div>
+          </div>
+          <div class="team-member">
+            <img src="https://images.unsplash.com/photo-1573497019236-17dd59b5fa20?ixlib=rb-4.0.3&ixid=MnwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8&auto=format&fit=crop&w=687&q=80" alt="Emily Rodriguez, Head of Investor Relations" width="250" height="250">
+            <div class="team-member-info">
+              <h3>Emily Rodriguez</h3>
+              <p>Head of Investor Relations</p>
+            </div>
+          </div>
+          <div class="team-member">
+            <img src="https://images.unsplash.com/photo-1578075545289-8b2f76de4462?ixlib=rb-4.0.3&ixid=MnwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8&auto=format&fit=crop&w=687&q=80" alt="David Kumar, Head of Startup Success" width="250" height="250">
+            <div class="team-member-info">
+              <h3>David Kumar</h3>
+              <p>Head of Startup Success</p>
+            </div>
+          </div>
+        </div>
+      </section>
+    </div>
+  </main>
+
+  <footer>
+    <div class="container">
+      <p>&copy; 2023 CrowdFund Innovate. All rights reserved.</p>
+    </div>
+  </footer>
+
+  <script>
+    // Add smooth scrolling to all links
+    document.querySelectorAll('a[href^="#"]').forEach(anchor => {
+      anchor.addEventListener('click', function (e) {
+        e.preventDefault();
+
+        document.querySelector(this.getAttribute('href')).scrollIntoView({
+          behavior: 'smooth'
+        });
+      });
+    });
+
+    // Add animation to sections
+    const observer = new IntersectionObserver((entries) => {
+      entries.forEach((entry) => {
+        if (entry.isIntersecting) {
+          entry.target.style.opacity = 1;
+          entry.target.style.transform = 'translateY(0)';
+        }
+      });
+    }, { threshold: 0.1 });
+
+    document.querySelectorAll('.about-section, .team-section').forEach((section) => {
+      section.style.opacity = 0;
+      section.style.transform = 'translateY(20px)';
+      section.style.transition = 'opacity 0.5s ease, transform 0.5s ease';
+      observer.observe(section);
+    });
+  </script>
+</body>
+</html>
