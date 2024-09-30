@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>User Dashboard - CrowdFund Innovate</title>
+    <title>Investor Dashboard - CrowdFund Innovate</title>
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha1/dist/css/bootstrap.min.css" rel="stylesheet">
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.7.2/font/bootstrap-icons.css">
     <style>
@@ -12,6 +12,10 @@
         }
         .sidebar {
             min-height: calc(100vh - 56px);
+        }
+        .card-hover:hover {
+            box-shadow: 0 0.5rem 1rem rgba(0, 0, 0, 0.15);
+            transition: box-shadow 0.3s ease-in-out;
         }
     </style>
 </head>
@@ -51,8 +55,8 @@
                             </a>
                         </li>
                         <li class="nav-item">
-                            <a class="nav-link" href="#settings">
-                                <i class="bi bi-gear"></i> Settings
+                            <a class="nav-link" href="#transactions">
+                                <i class="bi bi-credit-card"></i> Transactions
                             </a>
                         </li>
                         <li class="nav-item">
@@ -70,28 +74,35 @@
                 <section id="overview">
                     <h2 class="mb-3">Overview</h2>
                     <div class="row">
-                        <div class="col-md-6 mb-4">
-                            <div class="card">
+                        <div class="col-md-3 mb-4">
+                            <div class="card bg-primary text-white h-100 card-hover">
                                 <div class="card-body">
-                                    <h5 class="card-title">User Information</h5>
-                                    <p class="card-text"><strong>Email:</strong> {{ current_user.email }}</p>
-                                    <p class="card-text"><strong>Role:</strong> {{ current_user.role.capitalize() }}</p>
-                                    <p class="card-text"><strong>Joined:</strong> {{ current_user.created_at.strftime('%Y-%m-%d') }}</p>
+                                    <h5 class="card-title">Total Invested</h5>
+                                    <p class="card-text display-6">${{ "{:,.2f}".format(total_invested) }}</p>
                                 </div>
                             </div>
                         </div>
-                        
-                        <div class="col-md-6 mb-4">
-                            <div class="card">
+                        <div class="col-md-3 mb-4">
+                            <div class="card bg-success text-white h-100 card-hover">
                                 <div class="card-body">
-                                    <h5 class="card-title">Account Overview</h5>
-                                    {% if current_user.role == 'investor' %}
-                                        <p class="card-text">Total Invested: ${{ "{:,.2f}".format(total_invested) }}</p>
-                                        <p class="card-text">Number of Investments: {{ num_investments }}</p>
-                                    {% elif current_user.role == 'entrepreneur' %}
-                                        <p class="card-text">Total Campaigns: {{ num_campaigns }}</p>
-                                        <p class="card-text">Total Raised: ${{ "{:,.2f}".format(total_raised) }}</p>
-                                    {% endif %}
+                                    <h5 class="card-title">Active Investments</h5>
+                                    <p class="card-text display-6">{{ num_investments }}</p>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="col-md-3 mb-4">
+                            <div class="card bg-info text-white h-100 card-hover">
+                                <div class="card-body">
+                                    <h5 class="card-title">Total Returns</h5>
+                                    <p class="card-text display-6">${{ "{:,.2f}".format(total_returns) }}</p>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="col-md-3 mb-4">
+                            <div class="card bg-warning text-white h-100 card-hover">
+                                <div class="card-body">
+                                    <h5 class="card-title">ROI</h5>
+                                    <p class="card-text display-6">{{ "{:.2f}%".format(roi) }}</p>
                                 </div>
                             </div>
                         </div>
@@ -100,67 +111,74 @@
 
                 <section id="portfolio" class="mt-5">
                     <h2 class="mb-3">Portfolio</h2>
-                    {% if current_user.role == 'investor' %}
-                        <div class="table-responsive">
-                            <table class="table table-striped">
-                                <thead>
-                                    <tr>
-                                        <th>Campaign</th>
-                                        <th>Amount Invested</th>
-                                        <th>Date</th>
-                                        <th>Campaign Status</th>
-                                    </tr>
-                                </thead>
-                                <tbody>
-                                    {% for investment in investments %}
-                                    <tr>
-                                        <td><a href="/campaign/{{ investment.campaign.id }}">{{ investment.campaign.title }}</a></td>
-                                        <td>${{ "{:,.2f}".format(investment.amount) }}</td>
-                                        <td>{{ investment.created_at.strftime('%Y-%m-%d') }}</td>
-                                        <td>{{ investment.campaign.status }}</td>
-                                    </tr>
-                                    {% endfor %}
-                                </tbody>
-                            </table>
-                        </div>
-                    {% elif current_user.role == 'entrepreneur' %}
-                        <div class="table-responsive">
-                            <table class="table table-striped">
-                                <thead>
-                                    <tr>
-                                        <th>Campaign</th>
-                                        <th>Goal Amount</th>
-                                        <th>Current Amount</th>
-                                        <th>Status</th>
-                                        <th>Actions</th>
-                                    </tr>
-                                </thead>
-                                <tbody>
-                                    {% for campaign in campaigns %}
-                                    <tr>
-                                        <td><a href="/campaign/{{ campaign.id }}">{{ campaign.title }}</a></td>
-                                        <td>${{ "{:,.2f}".format(campaign.goal_amount) }}</td>
-                                        <td>${{ "{:,.2f}".format(campaign.current_amount) }}</td>
-                                        <td>{{ campaign.status }}</td>
-                                        <td>
-                                            <a href="/edit-campaign/{{ campaign.id }}" class="btn btn-sm btn-primary">Edit</a>
-                                            <a href="/campaign-stats/{{ campaign.id }}" class="btn btn-sm btn-info">Stats</a>
-                                        </td>
-                                    </tr>
-                                    {% endfor %}
-                                </tbody>
-                            </table>
-                        </div>
-                    {% endif %}
-                </section>
-
-                <section id="settings" class="mt-5">
-                    <h2 class="mb-3">Settings</h2>
                     <div class="card">
                         <div class="card-body">
-                            <h5 class="card-title">Account Settings</h5>
-                            <p>Here you can manage your account settings, notifications, and preferences.</p>
-                            <a href="#" class="btn btn-primary">Manage Settings</a>
+                            <div class="table-responsive">
+                                <table class="table table-hover">
+                                    <thead>
+                                        <tr>
+                                            <th>Campaign</th>
+                                            <th>Amount Invested</th>
+                                            <th>Date</th>
+                                            <th>Current Value</th>
+                                            <th>ROI</th>
+                                            <th>Status</th>
+                                        </tr>
+                                    </thead>
+                                    <tbody>
+                                        {% for investment in investments %}
+                                        <tr>
+                                            <td><a href="/campaign/{{ investment.campaign.id }}">{{ investment.campaign.title }}</a></td>
+                                            <td>${{ "{:,.2f}".format(investment.amount) }}</td>
+                                            <td>{{ investment.created_at.strftime('%Y-%m-%d') }}</td>
+                                            <td>${{ "{:,.2f}".format(investment.current_value) }}</td>
+                                            <td>{{ "{:.2f}%".format(investment.roi) }}</td>
+                                            <td>
+                                                <span class="badge bg-{{ 'success' if investment.campaign.status == 'active' else 'secondary' }}">
+                                                    {{ investment.campaign.status }}
+                                                </span>
+                                            </td>
+                                        </tr>
+                                        {% endfor %}
+                                    </tbody>
+                                </table>
+                            </div>
+                        </div>
+                    </div>
+                </section>
+
+                <section id="transactions" class="mt-5">
+                    <h2 class="mb-3">Recent Transactions</h2>
+                    <div class="card">
+                        <div class="card-body">
+                            <div class="table-responsive">
+                                <table class="table table-hover">
+                                    <thead>
+                                        <tr>
+                                            <th>Date</th>
+                                            <th>Type</th>
+                                            <th>Amount</th>
+                                            <th>Campaign</th>
+                                            <th>Status</th>
+                                        </tr>
+                                    </thead>
+                                    <tbody>
+                                        {% for transaction in transactions %}
+                                        <tr>
+                                            <td>{{ transaction.date.strftime('%Y-%m-%d') }}</td>
+                                            <td>{{ transaction.type }}</td>
+                                            <td>${{ "{:,.2f}".format(transaction.amount) }}</td>
+                                            <td>{{ transaction.campaign_title }}</td>
+                                            <td>
+                                                <span class="badge bg-{{ 'success' if transaction.status == 'completed' else 'warning' }}">
+                                                    {{ transaction.status }}
+                                                </span>
+                                            </td>
+                                        </tr>
+                                        {% endfor %}
+                                    </tbody>
+                                </table>
+                            </div>
                         </div>
                     </div>
                 </section>
@@ -169,11 +187,15 @@
                     <h2 class="mb-3">Profile</h2>
                     <div class="card">
                         <div class="card-body">
-                            <h5 class="card-title">Personal Profile</h5>
+                            <h5 class="card-title">Personal Information</h5>
                             <form id="profile-form">
                                 <div class="mb-3">
                                     <label for="full-name" class="form-label">Full Name</label>
                                     <input type="text" class="form-control" id="full-name" name="full_name" value="{{ current_user.full_name or '' }}" required>
+                                </div>
+                                <div class="mb-3">
+                                    <label for="email" class="form-label">Email</label>
+                                    <input type="email" class="form-control" id="email" name="email" value="{{ current_user.email }}" required readonly>
                                 </div>
                                 <div class="mb-3">
                                     <label for="date-of-birth" class="form-label">Date of Birth</label>

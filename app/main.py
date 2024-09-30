@@ -376,10 +376,28 @@ async def dashboard(request: Request, db: Session = Depends(get_db)):
         total_invested = sum(investment.amount for investment in investments)
         num_investments = len(investments)
         
+        # Calculate total returns and ROI (this is a placeholder, you should implement the actual logic)
+        total_returns = total_invested * 1.1  # Assuming 10% return for demonstration
+        roi = ((total_returns - total_invested) / total_invested) * 100 if total_invested > 0 else 0
+        
+        # Add current value and ROI to each investment (placeholder logic)
+        for investment in investments:
+            investment.current_value = investment.amount * 1.1
+            investment.roi = ((investment.current_value - investment.amount) / investment.amount) * 100
+        
+        # Fetch recent transactions (placeholder data)
+        transactions = [
+            {"date": datetime.now() - timedelta(days=i), "type": "Investment", "amount": 1000, "campaign_title": f"Campaign {i}", "status": "completed"}
+            for i in range(5)
+        ]
+        
         context.update({
             "investments": investments,
             "total_invested": total_invested,
-            "num_investments": num_investments
+            "num_investments": num_investments,
+            "total_returns": total_returns,
+            "roi": roi,
+            "transactions": transactions
         })
     elif current_user.role == schemas.UserRole.ENTREPRENEUR:
         campaigns = db.query(models.Campaign).filter(models.Campaign.company_id == current_user.company.id).all()
