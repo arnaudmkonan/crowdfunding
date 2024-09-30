@@ -365,17 +365,48 @@ async def dashboard(request: Request, db: Session = Depends(get_db)):
     current_user = await auth.get_current_user(request, db)
     if not current_user:
         return RedirectResponse(url="/login", status_code=303)
-    if current_user.role != schemas.UserRole.INVESTOR:
-        raise HTTPException(status_code=403, detail="Access denied. Investors only.")
     
-    investments = db.query(models.Investment).filter(models.Investment.investor_id == current_user.id).all()
-    total_invested = sum(investment.amount for investment in investments)
-    num_investments = len(investments)
-    
-    return templates.TemplateResponse("dashboard.html", {
+    context = {
         "request": request,
         "current_user": current_user,
-        "investments": investments,
-        "total_invested": total_invested,
-        "num_investments": num_investments
-    })
+    }
+    
+    if current_user.role == schemas.UserRole.INVESTOR:
+        investments = db.query(models.Investment).filter(models.Investment.investor_id == current_user.id).all()
+        total_invested = sum(investment.amount for investment in investments)
+        num_investments = len(investments)
+        
+        context.update({
+            "investments": investments,
+            "total_invested": total_invested,
+            "num_investments": num_investments
+        })
+    elif current_user.role == schemas.UserRole.ENTREPRENEUR:
+        campaigns = db.query(models.Campaign).filter(models.Campaign.company_id == current_user.company.id).all()
+        total_raised = sum(campaign.current_amount for campaign in campaigns)
+        num_campaigns = len(campaigns)
+        
+        context.update({
+            "campaigns": campaigns,
+            "total_raised": total_raised,
+            "num_campaigns": num_campaigns
+        })
+    
+    return templates.TemplateResponse("dashboard.html", context)
+
+@app.post("/api/update-profile")
+async def update_profile(
+    request: Request,
+    full_name: str = Form(...),
+    date_of_birth: str = Form(...),
+    address: str = Form(...),
+    id_number: str = Form(...),
+    db: Session = Depends(get_db),
+    current_user: schemas.User = Depends(auth.get_current_active_user)
+):
+    current_user.full_name = full_name
+    current_user.date_of_birth = date_of_birth
+    current_user.address = address
+    current_user.id_number = id_number
+    db.commit()
+    return {"message": "Profile updated successfully"}
