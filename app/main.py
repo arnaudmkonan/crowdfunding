@@ -1,4 +1,4 @@
-from fastapi import FastAPI, Request, Depends, HTTPException, status, BackgroundTasks, Response, Form
+from fastapi import FastAPI, Request, Depends, HTTPException, status, BackgroundTasks, Response, Form, File, UploadFile
 from fastapi.templating import Jinja2Templates
 from fastapi.staticfiles import StaticFiles
 from fastapi.responses import RedirectResponse, HTMLResponse
@@ -6,6 +6,7 @@ from datetime import timedelta, datetime
 from fastapi.security import OAuth2PasswordRequestForm, OAuth2PasswordBearer
 from jose import jwt, JWTError
 from app.schemas import UserRole
+from typing import Optional
 
 from app import auth, schemas, email as email_module
 from app.auth import SECRET_KEY, ALGORITHM
