@@ -4,13 +4,13 @@ from sqlalchemy import pool
 from alembic import context
 import os
 import sys
-import logging
 
-# Add the app directory to the Python path
+# Add the parent directory to the Python path
 sys.path.append(os.path.dirname(os.path.dirname(os.path.abspath(__file__))))
 
 # Import your models here
-from app.models import Base
+from app.database import Base
+from app.models import User, Company, Campaign, Investment  # Import all your models
 
 # this is the Alembic Config object, which provides
 # access to the values within the .ini file in use.
@@ -19,18 +19,13 @@ config = context.config
 # Interpret the config file for Python logging.
 # This line sets up loggers basically.
 if config.config_file_name is not None:
-    try:
-        fileConfig(config.config_file_name)
-    except Exception as e:
-        # If there's an error with the logging config, set up a basic logger
-        logging.basicConfig(level=logging.INFO)
-        logging.warning(f"Error setting up logging config: {str(e)}")
+    fileConfig(config.config_file_name)
 
 # Set up target metadata
-target_metadata = Base.metadata  # This line is crucial
+target_metadata = Base.metadata
 
 def get_url():
-    return os.getenv("DATABASE_URL", "postgresql://user:password@db/crowdfunding")
+    return os.getenv("DATABASE_URL")
 
 # Set the sqlalchemy.url in the alembic section
 config.set_main_option("sqlalchemy.url", get_url())
