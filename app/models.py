@@ -25,7 +25,7 @@ class User(Base):
     date_of_birth = Column(String)
     address = Column(String)
     id_number = Column(String)
-    kyc_verified = Column(Boolean, default=False)
+    kyc_status = Column(String, default="not_submitted")
     
     # Relationships
     company = relationship("Company", back_populates="owner", uselist=False)

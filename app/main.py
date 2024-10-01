@@ -428,3 +428,46 @@ async def update_profile(
     current_user.id_number = id_number
     db.commit()
     return {"message": "Profile updated successfully"}
+
+@app.post("/api/change-password")
+async def change_password(
+    request: Request,
+    current_password: str = Form(...),
+    new_password: str = Form(...),
+    db: Session = Depends(get_db),
+    current_user: schemas.User = Depends(auth.get_current_active_user)
+):
+    if not auth.verify_password(current_password, current_user.hashed_password):
+        raise HTTPException(status_code=400, detail="Incorrect current password")
+    current_user.hashed_password = auth.get_password_hash(new_password)
+    db.commit()
+    return {"message": "Password changed successfully"}
+
+@app.post("/api/upload-kyc-documents")
+async def upload_kyc_documents(
+    request: Request,
+    id_proof: UploadFile = File(...),
+    address_proof: UploadFile = File(...),
+    business_proof: Optional[UploadFile] = File(None),
+    db: Session = Depends(get_db),
+    current_user: schemas.User = Depends(auth.get_current_active_user)
+):
+    # Save the uploaded files
+    id_proof_path = f"kyc_documents/{current_user.id}_id_proof.pdf"
+    address_proof_path = f"kyc_documents/{current_user.id}_address_proof.pdf"
+    
+    with open(id_proof_path, "wb") as buffer:
+        buffer.write(await id_proof.read())
+    with open(address_proof_path, "wb") as buffer:
+        buffer.write(await address_proof.read())
+    
+    if current_user.role == schemas.UserRole.ENTREPRENEUR and business_proof:
+        business_proof_path = f"kyc_documents/{current_user.id}_business_proof.pdf"
+        with open(business_proof_path, "wb") as buffer:
+            buffer.write(await business_proof.read())
+    
+    # Update user's KYC status
+    current_user.kyc_status = "submitted"
+    db.commit()
+    
+    return {"message": "KYC documents uploaded successfully"}
