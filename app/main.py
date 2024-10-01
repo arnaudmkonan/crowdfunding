@@ -1,3 +1,4 @@
+import os
 from fastapi import FastAPI, Request, Depends, HTTPException, status, BackgroundTasks, Response, Form, File, UploadFile
 from fastapi.templating import Jinja2Templates
 from fastapi.staticfiles import StaticFiles
@@ -453,6 +454,9 @@ async def upload_kyc_documents(
     db: Session = Depends(get_db),
     current_user: schemas.User = Depends(auth.get_current_active_user)
 ):
+    # Create the kyc_documents directory if it doesn't exist
+    os.makedirs("kyc_documents", exist_ok=True)
+
     # Save the uploaded files
     id_proof_path = f"kyc_documents/{current_user.id}_id_proof.pdf"
     address_proof_path = f"kyc_documents/{current_user.id}_address_proof.pdf"
